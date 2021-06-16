@@ -17,5 +17,19 @@ namespace MQTests.Controllers
         {
             _logger = logger;
         }
+
+        [HttpGet]
+        [Route("~/ip/location")]
+        public string GetIpLocation(string ip)
+        {
+            return null;
+        }
+
+        [HttpGet]
+        [Route("~/city/locations")]
+        public string GetCityLocation(string city)
+        {
+            return null;
+        }
     }
 }
