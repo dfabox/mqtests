@@ -2,7 +2,7 @@
 
 namespace GeoData.Data
 {
-    public class GeoBaseFile : GeoFile
+    public class GeoLocalFile : GeoFile
     {
         protected override Stream GetStream()
         {

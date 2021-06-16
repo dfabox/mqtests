@@ -7,7 +7,7 @@ namespace GeoData.Data
     /// <summary>
     /// Абстрактная реализация файла базы
     /// </summary>
-    public abstract class GeoFile : IBaseFile, IDisposable
+    public abstract class GeoFile : IGeoFile, IDisposable
     {
         private Stream stream;
         public Stream Stream
