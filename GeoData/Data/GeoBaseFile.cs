@@ -3,11 +3,11 @@ using System.IO;
 
 namespace GeoData.Data
 {
-    public class AssemblyBaseFile : IBaseFileLoader
+    public class GeoBaseFile : IBaseFileLoader
     {
         public Stream GetStream()
         {
-            var basePath = new AsseblyBaseFilePath();
+            var basePath = new GeoBaseFilePath();
 
             var baseFile = new FileStream(basePath.FilePath, FileMode.Open, FileAccess.Read);
 

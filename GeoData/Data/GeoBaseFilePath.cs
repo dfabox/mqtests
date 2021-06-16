@@ -3,7 +3,7 @@ using GeoData.Base;
 
 namespace GeoData.Data
 {
-    public class AsseblyBaseFilePath : IBaseFilePath
+    public class GeoBaseFilePath : IBaseFilePath
     {
         public string FilePath => GetFilePath();
 

@@ -6,7 +6,7 @@ using GeoData.Base;
 
 namespace GeoData.Data
 {
-    public class AsseblyResourceFile : IBaseFileLoader
+    public class GeoResourceFile : IBaseFileLoader
     {
         private static Assembly GetAssembly(string AssemblyName = null)
         {
