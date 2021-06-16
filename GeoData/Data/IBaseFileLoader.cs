@@ -1,10 +1,11 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using GeoData.Models;
 
 namespace GeoData.Data
 {
-    public interface IBaseFileLoader
+    public interface IBaseFile
     {
-        public Stream GetStream();
+        public Stream Stream { get; }
+        public BaseHeader Header { get; }
     }
 }

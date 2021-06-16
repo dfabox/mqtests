@@ -6,21 +6,11 @@ using GeoData.Base;
 
 namespace GeoData.Data
 {
-    public class GeoResourceFile : IBaseFileLoader
+    public class GeoResourceFile : GeoFile
     {
-        private static Assembly GetAssembly(string AssemblyName = null)
+        private static Stream GetEmbeddedResource(string resourceName)
         {
-            if (string.IsNullOrWhiteSpace(AssemblyName))
-                return Assembly.GetExecutingAssembly();
-
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies(); //.OrderByDescending(o => o.FullName);
-
-            return assemblies.FirstOrDefault(a => a.GetName().Name == AssemblyName);
-        }
-
-        private static Stream GetEmbeddedResource(string resourceName, string AssemblyName = null)
-        {
-            var assembly = GetAssembly(AssemblyName);
+            var assembly = Assembly.GetExecutingAssembly();
 
             if (assembly == null)
                 return null;
@@ -34,7 +24,7 @@ namespace GeoData.Data
             return assembly.GetManifestResourceStream(name);
         }
 
-        public Stream GetStream()
+        protected override Stream GetStream()
         {
             return GetEmbeddedResource($"{BaseConsts.BASE_PATH}.{BaseConsts.FILE_NAME}");
         }

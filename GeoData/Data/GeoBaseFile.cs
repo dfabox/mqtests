@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 
 namespace GeoData.Data
 {
-    public class GeoBaseFile : IBaseFileLoader
+    public class GeoBaseFile : GeoFile
     {
-        public Stream GetStream()
+        protected override Stream GetStream()
         {
             var basePath = new GeoBaseFilePath();
 
