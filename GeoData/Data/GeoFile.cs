@@ -10,7 +10,7 @@ namespace GeoData.Data
     public abstract class GeoFile : IGeoFile, IDisposable
     {
         private Stream stream;
-        public Stream Stream
+        protected Stream Stream
         {
             get
             {
@@ -30,8 +30,8 @@ namespace GeoData.Data
             {
                 if (header == null)
                 {
-                    var stream = GetStream();
-                    header = new BaseHeader(stream);
+                    var buffer = ReadBuffer(0, BaseHeader.SIZE);
+                    header = new BaseHeader(buffer);
                 }
 
                 return header;
@@ -66,5 +66,17 @@ namespace GeoData.Data
         }
 
         protected abstract Stream GetStream();
+
+        public byte[] ReadBuffer(int offset, int count)
+        {
+            // TODO Реализовать безопасное чтение буфера из разных нитей
+
+            var data = Stream;
+
+            var reader = new BinaryReader(data);
+            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+
+            return reader.ReadBytes(count);
+        }
     }
 }

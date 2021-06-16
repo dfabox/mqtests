@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
+using GeoData.Common;
+using static GeoData.Common.BaseUtils;
 
 namespace GeoData.Models
 {
@@ -9,30 +9,28 @@ namespace GeoData.Models
     /// </summary>
     public class BaseHeader
     {
-        public int Version { get; private set; }           // версия база данных
-        public sbyte[] Name { get; private set; }          // [32] название/префикс для базы данных
-        public ulong Timestamp { get; private set; }       // время создания базы данных
-        public int Records { get; private set; }           // общее количество записей
-        public uint OffsetRanges { get; private set; }     // смещение относительно начала файла до начала списка записей с геоинформацией
-        public uint OffsetCities { get; private set; }     // смещение относительно начала файла до начала индекса с сортировкой по названию городов
-        public uint OffsetLocations { get; private set; }  // смещение относительно начала файла до начала списка записей о местоположении
+        public const int SIZE = 60;
 
-        /// <summary>
-        /// Строка названия/префикса
-        /// </summary>
-        public string NameText => new string(Name.Select(o => (char)o).ToArray())?.Trim();
+        public int Version { get; private set; }           // 0 4 версия база данных
+        public string Name { get; private set; }           // 4 32 название/префикс для базы данных
+        public ulong Timestamp { get; private set; }       // 36 8 время создания базы данных
+        public int Records { get; private set; }           // 44 4 общее количество записей
+        public uint OffsetRanges { get; private set; }     // 48 4 смещение относительно начала файла до начала списка записей с геоинформацией
+        public uint OffsetCities { get; private set; }     // 52 4 смещение относительно начала файла до начала индекса с сортировкой по названию городов
+        public uint OffsetLocations { get; private set; }  // 56 4 смещение относительно начала файла до начала списка записей о местоположении
 
-        public BaseHeader(Stream stream)
+        public BaseHeader(byte[] buffer)
         {
-            using var reader = new BinaryReader(stream);
+            if (buffer == null || buffer.Length < SIZE)
+                throw new InvalidBufferException("BaseHeader", buffer?.Length ?? 0, SIZE);
 
-            Version = reader.ReadInt32();
-            Name = reader.ReadBytes(32).Select(o => (sbyte)o).ToArray();
-            Timestamp = reader.ReadUInt64();
-            Records = reader.ReadInt32();
-            OffsetRanges = reader.ReadUInt32();
-            OffsetCities = reader.ReadUInt32();
-            OffsetLocations = reader.ReadUInt32();
+            Version = BitConverter.ToInt32(buffer, 0);
+            Name = buffer.GetStringFromBytes(4, 32);
+            Timestamp = BitConverter.ToUInt64(buffer, 36);
+            Records = BitConverter.ToInt32(buffer, 44);
+            OffsetRanges = BitConverter.ToUInt32(buffer, 48);
+            OffsetCities = BitConverter.ToUInt32(buffer, 52);
+            OffsetLocations = BitConverter.ToUInt32(buffer, 56);
         }
     }
 }
