@@ -1,5 +1,5 @@
 ﻿using System;
-namespace GeoData.Struncts
+namespace GeoData.Models
 {
     /// <summary>
     /// Диапазон ip-адресов

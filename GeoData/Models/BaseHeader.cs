@@ -1,14 +1,14 @@
 ﻿using System;
 
-namespace GeoData.Structs
+namespace GeoData.Models
 {
     /// <summary>
     /// Заголовок файла геоданных
     /// </summary>
-    public unsafe struct BaseHeader
+    public class BaseHeader
     {
         public int version;           // версия база данных
-        public fixed sbyte name[32];        // название/префикс для базы данных
+        //public sbyte name[32];        // название/префикс для базы данных
         public ulong timestamp;       // время создания базы данных
         public int records;           // общее количество записей
         public uint offset_ranges;    // смещение относительно начала файла до начала списка записей с геоинформацией
