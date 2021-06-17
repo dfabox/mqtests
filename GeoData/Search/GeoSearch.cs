@@ -14,19 +14,38 @@ namespace GeoData.Search
             this.data = data;
         }
 
-        public BaseGeoPosition GetPositionAt(uint index)
+        public byte[] GetBufferAt(uint index, uint offset, uint size)
         {
             if (index < 0 || index >= data.Header.Records)
                 throw new IndexOutOfRangeException();
 
-            var buffer = data.ReadBuffer(Header.OffsetLocations + index* BaseGeoPosition.SIZE, BaseGeoPosition.SIZE);
+            var buffer = data.ReadBuffer(offset + index * size, size);
 
             if (buffer == null)
                 throw new NullReferenceException();
 
-            var result = new BaseGeoPosition(buffer);
+            return buffer;
+        }
 
-            return result;
+        public BaseGeoLocation GetPositionAt(uint index)
+        {
+            var buffer = GetBufferAt(index, Header.OffsetLocations, BaseGeoLocation.SIZE);
+
+            return new BaseGeoLocation(buffer);
+        }
+
+        public BaseIpRange GetIpAt(uint index)
+        {
+            var buffer = GetBufferAt(index, Header.OffsetLocations, BaseGeoLocation.SIZE);
+
+            return new BaseIpRange(buffer);
+        }
+
+        public BaseCityIndex GetCityIndexAt(uint index)
+        {
+            var buffer = GetBufferAt(index, Header.OffsetLocations, BaseGeoLocation.SIZE);
+
+            return new BaseCityIndex(buffer);
         }
 
         public SearchResult GeoPositionFromCity(string city)

@@ -7,7 +7,7 @@ namespace GeoData.Models
     /// <summary>
     /// Местоположение
     /// </summary>
-    public class BaseGeoPosition
+    public class BaseGeoLocation
     {
         public const uint SIZE = 96;
 
@@ -19,10 +19,10 @@ namespace GeoData.Models
         public float Latitude { get; private set; }       // 88 4 широта
         public float Longitude { get; private set; }      // 92 4 долгота
 
-        public BaseGeoPosition(byte[] buffer)
+        public BaseGeoLocation(byte[] buffer)
         {
             if (buffer == null || buffer.Length < SIZE)
-                throw new InvalidBufferException("BaseGeoPosition", buffer?.Length ?? 0, SIZE);
+                throw new InvalidBufferException(nameof(BaseGeoLocation), buffer?.Length ?? 0, SIZE);
 
             Country = buffer.GetStringFromBytes(0, 8);
             Region = buffer.GetStringFromBytes(8, 12);

@@ -22,7 +22,7 @@ namespace GeoData.Models
         public BaseHeader(byte[] buffer)
         {
             if (buffer == null || buffer.Length < SIZE)
-                throw new InvalidBufferException("BaseHeader", buffer?.Length ?? 0, SIZE);
+                throw new InvalidBufferException(nameof(BaseHeader), buffer?.Length ?? 0, SIZE);
 
             Version = BitConverter.ToInt32(buffer, 0);
             Name = buffer.GetStringFromBytes(4, 32);
