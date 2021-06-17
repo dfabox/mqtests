@@ -1,4 +1,4 @@
-﻿using GeoData.Search;
+﻿using GeoData.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,19 +10,19 @@ namespace MQTests.Controllers
     public class GeoInfoController : ControllerBase
     {
         private readonly ILogger<GeoInfoController> logger;
-        private readonly IGeoSearch geoSearch;
+        private readonly IGeoFile geoFile;
 
-        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoSearch geoSearch)
+        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoFile geoFile)
         {
             this.logger = logger;
-            this.geoSearch = geoSearch;
+            this.geoFile = geoFile;
         }
 
         [HttpGet]
         [Route("~/ip/location")]
         public string GetIpLocation(string text)
         {
-            var result = geoSearch?.GeoLocationByIp(text);
+            var result = geoFile?.GeoLocationByIp(text);
             //var result = new SearchResult($"Запрос данных по IP не реализован {text}");
 
             return JsonConvert.SerializeObject(result);
@@ -32,7 +32,7 @@ namespace MQTests.Controllers
         [Route("~/city/locations")]
         public string GetCityLocation(string text)
         {
-            var result = geoSearch?.GeoLocationByCity(text);
+            var result = geoFile?.GeoLocationByCity(text);
             //var result = new SearchResult($"Запрос данных по городу не реализован {text}");
 
             return JsonConvert.SerializeObject(result);

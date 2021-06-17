@@ -1,4 +1,4 @@
-﻿namespace GeoData.Search
+﻿namespace GeoData.Data
 {
     public enum SearchResultStatus
     {

@@ -1,12 +1,13 @@
 ﻿using GeoData.Models;
 
-namespace GeoData.Search
+namespace GeoData.Data
 {
     public class SearchResult
     {
         public SearchResultStatus Status { get; set; }
         public string Msg { get; set; }
         public BaseGeoLocation Location { get; set; }
+        public double TimeMS { get; set; }
 
         public SearchResult(string errorMsg)
         {

@@ -6,6 +6,11 @@ namespace GeoData.Data
     {
         public BaseHeader Header { get; }
 
-        public byte[] ReadBuffer(uint offset, uint count);
+        public BaseGeoLocation GetLocationAt(uint index);
+        public BaseIpRange GetIpRangeAt(uint index);
+        public BaseCityIndex GetCityIndexAt(uint index);
+
+        public SearchResult GeoLocationByIp(string ip);
+        public SearchResult GeoLocationByCity(string city);
     }
 }

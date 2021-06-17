@@ -9,14 +9,12 @@
     <None Remove="Data\" />
     <None Remove="Models\" />
     <None Remove="Base\geobase.dat" />
-    <None Remove="Search\" />
     <None Remove="Common\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Base\" />
     <Folder Include="Data\" />
     <Folder Include="Models\" />
-    <Folder Include="Search\" />
     <Folder Include="Common\" />
   </ItemGroup>
   <ItemGroup>
