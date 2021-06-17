@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using GeoData.Models;
+using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
-    public abstract class GeoFile : IGeoFile, IDisposable
+    public abstract class GeoBase : IGeoBase, IDisposable
     {
         public BaseHeader Header { get; private set; }
         protected IDisposable file;
@@ -56,8 +58,8 @@ namespace GeoData.Data
 
         public SearchResult FindLocationByCity(string city)
         {
-            // Прямой перебор
-            var t0 = DateTime.Now;
+            var sw = Stopwatch.StartNew();
+
             BaseGeoLocation location = null;
 
             lock (file)
@@ -73,50 +75,59 @@ namespace GeoData.Data
                 }
             }
 
-            var result = new SearchResult(location, t0);
+            sw.Stop();
+            var result = new SearchResult(location, sw);
             return result;
         }
 
-        public SearchResult FindLocationByIp(string ip)
+        public BaseIpRange FindRangeByIp(uint ip)
         {
-            var t0 = DateTime.Now;
+            lock (file)
+            {
+                var index = BinarySearchIp(this, ip, 0, Convert.ToUInt32(IP_RANGE_COUNT - 1));
+
+                if (index >= 0)
+                    return GetIpRangeAt(Convert.ToUInt32(index));
+                else
+                    return null;
+            }
+        }
+
+        public SearchResult FindLocationByIp(uint ip)
+        {
+            var sw = Stopwatch.StartNew();
+
             BaseGeoLocation location = null;
 
-            if (uint.TryParse(ip, out var ipValue))
-            {
-                lock (file)
-                {
-                    // Прямой перебор
-                    for (uint i = 0; i < Header.Records; i++)
-                    {
-                        var item = GetIpRangeAt(i);
-                        if (item.IpFrom <= ipValue && ipValue <= item.IpTo)
-                        {
-                            location = GetLocationAt(item.LocationIndex);
-                            break;
-                        }
-                    }
-                }
-            }
+            var ipRange = FindRangeByIp(ip);
 
-            var result = new SearchResult(location, t0);
+            if (ipRange != null)
+                location = GetLocationAt(ipRange.LocationIndex);
+
+            sw.Stop();
+            var result = new SearchResult(location, sw);
             return result;
         }
 
         //метод бинарного поиска с использованием цикла
-        static long BinarySearchIp(IGeoFile geoFile, uint ipValue, uint left, uint right)
+        private static long BinarySearchIp(IGeoBase geoFile, uint ipValue, uint left, uint right)
         {
-            //пока не сошлись границы массива
+            // Последний просмотренный элемент
+            BaseIpRange ipRange;
+
+            // Пока не сошлись границы массива
             while (left <= right)
             {
-                //индекс среднего элемента
+                // Индекс среднего элемента
                 var middle = (left + right) / 2;
 
-                if (ipValue == geoFile.GetIpRangeAt(middle).IpFrom)
+                ipRange = geoFile.GetIpRangeAt(middle);
+                // Не точное значение, а попадание в диапазон
+                if (ipRange.IpFrom <= ipValue && ipValue <= ipRange.IpTo)
                 {
                     return middle;
                 }
-                else if (ipValue < geoFile.GetIpRangeAt(middle).IpFrom)
+                else if (ipValue < ipRange.IpFrom)
                 {
                     //сужаем рабочую зону массива с правой стороны
                     right = middle - 1;
@@ -127,6 +138,8 @@ namespace GeoData.Data
                     left = middle + 1;
                 }
             }
+            // Или нашли точное совпадение с IpFrom или диапазон включающий
+
             //ничего не нашли
             return -1;
         }

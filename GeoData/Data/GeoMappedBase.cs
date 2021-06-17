@@ -4,11 +4,11 @@ using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
-    public class GeoMappedFile : GeoFile
+    public class GeoMappedBase : GeoBase
     {
         private MemoryMappedFile mmFile;
 
-        public GeoMappedFile()
+        public GeoMappedBase()
         {
             var baseFileName = GetLocalBaseFileName();
 

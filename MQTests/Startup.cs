@@ -21,7 +21,7 @@ namespace MQTests
         {
             services.AddControllers();
 
-            services.AddSingleton<IGeoFile>(new GeoFile());
+            services.AddSingleton<IGeoBase>(new GeoBase());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

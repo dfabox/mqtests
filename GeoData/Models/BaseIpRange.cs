@@ -21,7 +21,7 @@ namespace GeoData.Models
 
             IpFrom = BitConverter.ToUInt32(buffer, 0);
             IpTo = BitConverter.ToUInt32(buffer, 4);
-            LocationIndex = BitConverter.ToUInt32(buffer, 0);
+            LocationIndex = BitConverter.ToUInt32(buffer, 8);
         }
     }
 }

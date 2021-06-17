@@ -3,9 +3,9 @@ using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
-    public class GeoLocalFile : GeoStreamFile
+    public class GeoLocalBase : GeoStreamBase
     {
-        public GeoLocalFile()
+        public GeoLocalBase()
         {
             var baseFileName = GetLocalBaseFileName();
             var stream = new FileStream(baseFileName, FileMode.Open, FileAccess.Read);

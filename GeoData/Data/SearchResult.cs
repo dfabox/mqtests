@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using GeoData.Models;
 
 namespace GeoData.Data
@@ -8,7 +9,7 @@ namespace GeoData.Data
         public SearchResultStatus Status { get; set; }
         public string Msg { get; set; }
         public BaseGeoLocation Location { get; set; }
-        public double TimeMS { get; set; }
+        public double TimeMs { get; set; }
 
         public SearchResult(string errorMsg)
         {
@@ -16,11 +17,11 @@ namespace GeoData.Data
             Msg = errorMsg;
         }
 
-        public SearchResult(BaseGeoLocation location, DateTime start)
+        public SearchResult(BaseGeoLocation location, Stopwatch sw)
         {
             Status = location == null ? SearchResultStatus.NotFound : SearchResultStatus.Success;
             Location = location;
-            TimeMS = (DateTime.Now - start).TotalMilliseconds;
+            TimeMs = sw.Elapsed.TotalMilliseconds;
         }
     }
 }

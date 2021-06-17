@@ -10,9 +10,9 @@ namespace MQTests.Controllers
     public class GeoInfoController : ControllerBase
     {
         private readonly ILogger<GeoInfoController> logger;
-        private readonly IGeoFile geoFile;
+        private readonly IGeoBase geoFile;
 
-        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoFile geoFile)
+        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoBase geoFile)
         {
             this.logger = logger;
             this.geoFile = geoFile;

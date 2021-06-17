@@ -5,14 +5,12 @@ using GeoData.Data;
 using System.IO;
 
 namespace DataLoadTests
-
-
 {
     class Program
     {
-        private const int TEST_COUNT = 10;
+        private const int TEST_COUNT = 100000;
 
-        private static void TestCity1(IGeoFile geoBase, uint pos)
+        private static void TestCity1(IGeoBase geoBase, uint pos)
         {
             var location = geoBase.GetLocationAt(pos);
 
@@ -20,7 +18,7 @@ namespace DataLoadTests
             var location1 = geoBase.FindLocationByCity(city);
         }
 
-        private static void TestCity(IGeoFile geoBase)
+        private static void TestCity(IGeoBase geoBase)
         {
             var random = new Random();
             var w1 = Stopwatch.StartNew();
@@ -35,27 +33,31 @@ namespace DataLoadTests
             Console.WriteLine($"t: {w1.ElapsedMilliseconds}");
         }
 
-        private static void TestIp1(IGeoFile geoBase, uint ip)
+        private static bool TestIp1(IGeoBase geoBase, int index)
         {
-            var location1 = geoBase.FindLocationByIp(ip.ToString());
+            var ipRange = geoBase.GetIpRangeAt(Convert.ToUInt32(index));
+
+            var location1 = geoBase.FindLocationByIp(ipRange.IpFrom + 1);
+
+            return location1 != null;
         }
 
-        private static void TestIp(IGeoFile geoBase)
+        private static void TestIp(IGeoBase geoBase)
         {
             var random = new Random();
             var w1 = Stopwatch.StartNew();
 
-            var ipMin = geoBase.GetIpRangeAt(0).IpFrom;
-            var ipMax = geoBase.GetIpRangeAt(Convert.ToUInt32(geoBase.Header.Records - 1)).IpTo;
-
+            var successCount = 0;
             for (var i = 0; i < TEST_COUNT; i++)
             {
-                var ip = Convert.ToUInt32(random.Next(geoBase.Header.Records));
-                TestIp1(geoBase, ip);
+                var index = random.Next(0, IP_RANGE_COUNT - 1);
+
+                if (TestIp1(geoBase, index))
+                    successCount += 1;
             }
 
             w1.Stop();
-            Console.WriteLine($"t: {w1.ElapsedMilliseconds}");
+            Console.WriteLine($"t: {w1.Elapsed.TotalMilliseconds}, success: {successCount}");
         }
 
         public static T GetObject<T>(Type objType = null)
@@ -63,7 +65,7 @@ namespace DataLoadTests
             return (T)Activator.CreateInstance(objType ?? typeof(T));
         }
 
-        private static void TestGeoBase<T>() where T : GeoFile
+        private static void TestGeoBase<T>() where T : GeoBase
         {
             var w1 = Stopwatch.StartNew();
             using var geoBase = GetObject<T>();
@@ -84,7 +86,7 @@ namespace DataLoadTests
             var allocBuffer = new byte[info.Length* 3];
 
             //TestGeoBase<GeoLocalFile>();
-            TestGeoBase<GeoResourceFile>();
+            TestGeoBase<GeoResourceBase>();
             //TestGeoBase<GeoMappedFile>();
 
             var b1 = allocBuffer[0];

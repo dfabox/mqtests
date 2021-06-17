@@ -3,7 +3,7 @@ using System.IO;
 
 namespace GeoData.Data
 {
-    public class GeoStreamFile : GeoFile
+    public class GeoStreamBase : GeoBase
     {
         private Stream stream;
 

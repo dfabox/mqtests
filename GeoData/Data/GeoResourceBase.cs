@@ -1,14 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
 using GeoData.Base;
 
 namespace GeoData.Data
 {
-    public class GeoResourceFile : GeoStreamFile
+    public class GeoResourceBase: GeoStreamBase
     {
-        public GeoResourceFile()
+        public GeoResourceBase()
         {
             var stream = GetEmbeddedResource($"{BaseConsts.BASE_PATH}.{BaseConsts.FILE_NAME}");
 

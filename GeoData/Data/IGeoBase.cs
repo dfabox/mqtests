@@ -2,7 +2,7 @@
 
 namespace GeoData.Data
 {
-    public interface IGeoFile
+    public interface IGeoBase
     {
         public BaseHeader Header { get; }
 
@@ -10,7 +10,8 @@ namespace GeoData.Data
         public BaseIpRange GetIpRangeAt(uint index);
         public BaseCityIndex GetCityIndexAt(uint index);
 
-        public SearchResult FindLocationByIp(string ip);
+        public BaseIpRange FindRangeByIp(uint ip);
+        public SearchResult FindLocationByIp(uint ip);
         public SearchResult FindLocationByCity(string city);
     }
 }
