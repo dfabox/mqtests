@@ -9,14 +9,13 @@ namespace DataLoadTests
 {
     class Program
     {
-        private const int TEST_COUNT = 100000;
+        private const int TEST_COUNT = 1000;
 
         private static bool TestCity1(IGeoBase geoBase, uint pos)
         {
             var location = geoBase.GetLocationAt(pos);
 
             var city = location.City; // "cit_Ula";
-            var city1 = BaseUtils.GetBytesFromStringLen(city, 32, '\0');
 
             var result = geoBase.FindLocationByCity(city);
 
@@ -28,14 +27,18 @@ namespace DataLoadTests
             var random = new Random();
             var sw = Stopwatch.StartNew();
 
+            var successCount = 0;
             for (var i = 0; i < TEST_COUNT; i++)
             {
                 var pos = Convert.ToUInt32(random.Next(geoBase.Header.Records));
-                TestCity1(geoBase, pos);
+                if (TestCity1(geoBase, pos))
+                    successCount += 1;
             }
 
             sw.Stop();
-            Console.WriteLine($"t: {sw.ElapsedMilliseconds}");
+            var ms = sw.Elapsed.TotalMilliseconds;
+
+            Console.WriteLine($"t: {ms}, success: {successCount}");
         }
 
         private static bool TestIp1(IGeoBase geoBase, int index)
