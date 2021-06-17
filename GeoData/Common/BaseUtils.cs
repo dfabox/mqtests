@@ -1,12 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace GeoData.Common
 {
     public static class BaseUtils
-    {     
+    {
         /// <summary>
         /// Structure is converted to a byte array
         /// </summary>

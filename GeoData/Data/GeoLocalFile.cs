@@ -1,16 +1,16 @@
 ﻿using System.IO;
+using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
-    public class GeoLocalFile : GeoFile
+    public class GeoLocalFile : GeoStreamFile
     {
-        protected override Stream GetStream()
+        public GeoLocalFile()
         {
-            var basePath = new GeoBaseFilePath();
+            var baseFileName = GetLocalBaseFileName();
+            var stream = new FileStream(baseFileName, FileMode.Open, FileAccess.Read);
 
-            var baseFile = new FileStream(basePath.FilePath, FileMode.Open, FileAccess.Read);
-
-            return baseFile;
+            SetStream(stream);
         }
     }
 }

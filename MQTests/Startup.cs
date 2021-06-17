@@ -1,5 +1,4 @@
 ﻿using GeoData.Data;
-using GeoData.Search;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -22,8 +21,7 @@ namespace MQTests
         {
             services.AddControllers();
 
-            services.AddSingleton<IGeoFile, GeoResourceFile>();
-            services.AddScoped<IGeoSearch, GeoSearch>();
+            services.AddSingleton<IGeoFile>(new GeoFile());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

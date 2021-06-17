@@ -1,6 +1,8 @@
 ﻿using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
+using static GeoData.Base.BaseConsts;
 using GeoData.Data;
+using System.IO;
 
 namespace DataLoadTests
 
@@ -8,51 +10,46 @@ namespace DataLoadTests
 {
     class Program
     {
-
-        static void Main(string[] args)
+        private static void TestCity(IGeoFile geoBase)
         {
-            DateTime t0;
-
-            t0 = DateTime.Now;
-            using var baseFile1 = new GeoLocalFile();
-            var h1 = baseFile1.Header;
-            var s0 = DateTime.Now - t0;
-
-            t0 = DateTime.Now;
-            using var geoBase = new GeoResourceFile();
-            var h = geoBase.Header;
-            var s1 = DateTime.Now - t0;
-
-            Console.WriteLine($"r: {s1.Milliseconds}, f: {s0.Milliseconds}");
-
-            Console.WriteLine($"n: {h.Name}, v: {h.Version}, r: {h.Records}");
-
-            uint pos = 99999;
+            uint pos = 99999; // 99999;
             var p1 = geoBase.GetLocationAt(pos);
             Console.WriteLine($"n: {p1.City}");
 
-            //for (uint i = 0; i < 10; i++)
-            //{
-            //    var p1 = search.GetLocationAt(i);
-            //    Console.WriteLine($"n: {p1.City}");
-            //}
-
-            //for (uint i = 0; i < 10; i++)
-            //{
-            //    var i1 = search.GetIpRangeAt(i);
-            //    Console.WriteLine($"ip: {i1.IpFrom} - {i1.IpTo}, a: {i1.LocationIndex}");
-            //}
-
-            //for (uint i = 0; i < 10; i++)
-            //{
-            //    var i1 = search.GetCityIndexAt(i);
-            //    Console.WriteLine($"a: {i1.LocationIndex}");
-            //}
-
             var city = p1.City; // "cit_Ula";
-            var l1 = geoBase.GeoLocationByCity(city);
-            Console.WriteLine($"s: {l1.Status}, c: {l1.Location?.City}, t: {l1.TimeMS}, t1: {l1.TimeMS/ pos}");
+            var l1 = geoBase.FindLocationByCity(city);
+            Console.WriteLine($"s: {l1.Status}, c: {l1.Location?.City}, t: {l1.TimeMS}, t1: {l1.TimeMS / pos}");
+        }
 
+        public static T GetObject<T>(Type objType = null)
+        {
+            return (T)Activator.CreateInstance(objType ?? typeof(T));
+        }
+
+        private static void TestGeoBase<T>() where T : GeoFile
+        {
+            var w1 = Stopwatch.StartNew();
+            using var geoBase = GetObject<T>();
+            var h = geoBase.Header;
+            w1.Stop();
+
+            Console.WriteLine($"t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
+
+            //TestCity(geoBase);
+        }
+
+        static void Main(string[] args)
+        {
+            // Выделить размер памяти для загрузки файла
+            //var baseFileName = GetLocalBaseFileName();
+            //var info = new FileInfo(baseFileName);
+            //var allocBuffer = new byte[info.Length];
+
+            TestGeoBase<GeoLocalFile>();
+            TestGeoBase<GeoResourceFile>();
+            TestGeoBase<GeoMappedFile>();
+
+            //allocBuffer = null;
             Console.ReadKey();
         }
     }

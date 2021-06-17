@@ -1,95 +1,24 @@
 ﻿using System;
-using System.IO;
 using GeoData.Models;
 
 namespace GeoData.Data
 {
-    /// <summary>
-    /// Абстрактная реализация файла базы
-    /// </summary>
     public abstract class GeoFile : IGeoFile, IDisposable
     {
-        private Stream stream;
-        protected Stream Stream
-        {
-            get
-            {
-                if (stream == null)
-                {
-                    stream = GetStream();
-                }
+        public BaseHeader Header { get; private set; }
+        protected IDisposable file;
 
-                return stream;
-            }
+        protected void LoadHeader()
+        {
+            var buffer = ReadBuffer(0, BaseHeader.SIZE);
+            Header = new BaseHeader(buffer);
         }
 
-        private BaseHeader header;
-        public BaseHeader Header
+        protected virtual byte[] ReadBuffer(uint offset, uint count)
         {
-            get
-            {
-                if (header == null)
-                {
-                    var buffer = ReadBuffer(0, BaseHeader.SIZE);
-                    header = new BaseHeader(buffer);
-                }
-
-                return header;
-            }
+            throw new NotImplementedException();
         }
 
-        private bool disposed = false;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                if (stream != null)
-                {
-                    stream.Dispose();
-                    stream = null;
-                }
-            }
-
-            disposed = true;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected abstract Stream GetStream();
-
-        private byte[] ReadBuffer(uint offset, uint size)
-        {
-            // TODO Реализовать проверку параметров для чтения буфера
-
-            var data = Stream;
-
-            // TODO Реализовать безопасное чтение буфера из разных нитей
-            lock (stream)
-            {
-                var reader = new BinaryReader(data);
-                reader.BaseStream.Seek(offset, SeekOrigin.Begin);
-
-                return reader.ReadBytes(Convert.ToInt32(size));
-            }
-        }
-
-        /// <summary>
-        /// Чтение буфера элемента из заданного блока
-        /// </summary>
-        /// <param name="index">индекс элемента в блоке</param>
-        /// <param name="offset">смещение блока</param>
-        /// <param name="size">размер элемента</param>
-        /// <returns></returns>
         private byte[] GetBufferAt(uint index, uint offset, uint size)
         {
             if (index < 0 || index >= Header.Records)
@@ -131,7 +60,7 @@ namespace GeoData.Data
             var t0 = DateTime.Now;
             BaseGeoLocation location = null;
 
-            lock (stream)
+            lock (file)
             {
                 for (uint i = 0; i < Header.Records; i++)
                 {
@@ -155,7 +84,7 @@ namespace GeoData.Data
 
             if (uint.TryParse(ip, out var ipInt))
             {
-                lock (stream)
+                lock (file)
                 {
                     // Прямой перебор
                     for (uint i = 0; i < Header.Records; i++)
@@ -173,5 +102,31 @@ namespace GeoData.Data
             var result = new SearchResult(location, t0);
             return result;
         }
+
+        #region IDisposable
+        private bool disposed = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                file?.Dispose();
+                file = null;
+            }
+
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        #endregion
     }
 }

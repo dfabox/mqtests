@@ -6,8 +6,15 @@ using GeoData.Base;
 
 namespace GeoData.Data
 {
-    public class GeoResourceFile : GeoFile
+    public class GeoResourceFile : GeoStreamFile
     {
+        public GeoResourceFile()
+        {
+            var stream = GetEmbeddedResource($"{BaseConsts.BASE_PATH}.{BaseConsts.FILE_NAME}");
+
+            SetStream(stream);
+        }
+
         private static Stream GetEmbeddedResource(string resourceName)
         {
             var assembly = Assembly.GetExecutingAssembly();
@@ -22,11 +29,6 @@ namespace GeoData.Data
                 return null;
 
             return assembly.GetManifestResourceStream(name);
-        }
-
-        protected override Stream GetStream()
-        {
-            return GetEmbeddedResource($"{BaseConsts.BASE_PATH}.{BaseConsts.FILE_NAME}");
         }
     }
 }
