@@ -22,8 +22,8 @@ namespace MQTests.Controllers
         [Route("~/ip/location")]
         public string GetIpLocation(string text)
         {
-            //var position = geoSearch?.GeoPositionFromIp(ip);
-            var result = new SearchResult($"Запрос данных по IP не реализован {text}");
+            var result = geoSearch?.GeoPositionFromIp(text);
+            //var result = new SearchResult($"Запрос данных по IP не реализован {text}");
 
             return JsonConvert.SerializeObject(result);
         }
@@ -32,8 +32,8 @@ namespace MQTests.Controllers
         [Route("~/city/locations")]
         public string GetCityLocation(string text)
         {
-            //var position = geoSearch?.GeoPositionFromCity(city);
-            var result = new SearchResult($"Запрос данных по городу не реализован {text}");
+            var result = geoSearch?.GeoPositionFromCity(text);
+            //var result = new SearchResult($"Запрос данных по городу не реализован {text}");
 
             return JsonConvert.SerializeObject(result);
         }
