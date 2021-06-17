@@ -10,7 +10,7 @@ namespace GeoData.Data
         public BaseIpRange GetIpRangeAt(uint index);
         public BaseCityIndex GetCityIndexAt(uint index);
 
-        public SearchResult GeoLocationByIp(string ip);
-        public SearchResult GeoLocationByCity(string city);
+        public SearchResult FindLocationByIp(string ip);
+        public SearchResult FindLocationByCity(string city);
     }
 }

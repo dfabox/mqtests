@@ -1,4 +1,5 @@
-﻿using GeoData.Models;
+﻿using System;
+using GeoData.Models;
 
 namespace GeoData.Data
 {
@@ -15,10 +16,11 @@ namespace GeoData.Data
             Msg = errorMsg;
         }
 
-        public SearchResult(BaseGeoLocation location)
+        public SearchResult(BaseGeoLocation location, DateTime start)
         {
             Status = location == null ? SearchResultStatus.NotFound : SearchResultStatus.Success;
             Location = location;
+            TimeMS = (DateTime.Now - start).TotalMilliseconds;
         }
     }
 }

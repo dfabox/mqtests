@@ -125,7 +125,7 @@ namespace GeoData.Data
             return new BaseCityIndex(buffer);
         }
 
-        public SearchResult GeoLocationByCity(string city)
+        public SearchResult FindLocationByCity(string city)
         {
             // Прямой перебор
             var t0 = DateTime.Now;
@@ -135,23 +135,43 @@ namespace GeoData.Data
             {
                 for (uint i = 0; i < Header.Records; i++)
                 {
-                    var l = GetLocationAt(i);
-                    if (l.City == city)
+                    var item = GetLocationAt(i);
+                    if (item.City == city)
                     {
-                        location = l;
+                        location = item;
                         break;
                     }
                 }
             }
 
-            var result = new SearchResult(location);
-            result.TimeMS = (DateTime.Now - t0).TotalMilliseconds;
+            var result = new SearchResult(location, t0);
             return result;
         }
 
-        public SearchResult GeoLocationByIp(string ip)
+        public SearchResult FindLocationByIp(string ip)
         {
-            throw new NotImplementedException();
+            var t0 = DateTime.Now;
+            BaseGeoLocation location = null;
+
+            if (uint.TryParse(ip, out var ipInt))
+            {
+                lock (stream)
+                {
+                    // Прямой перебор
+                    for (uint i = 0; i < Header.Records; i++)
+                    {
+                        var item = GetIpRangeAt(i);
+                        if (item.IpFrom <= ipInt && ipInt <= item.IpTo)
+                        {
+                            location = GetLocationAt(item.LocationIndex);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var result = new SearchResult(location, t0);
+            return result;
         }
     }
 }
