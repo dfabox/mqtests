@@ -9,6 +9,8 @@ namespace GeoData.Data
     /// </summary>
     public abstract class GeoFile : IGeoFile, IDisposable
     {
+        private bool Lock = false;
+
         private Stream stream;
         protected Stream Stream
         {
@@ -69,14 +71,18 @@ namespace GeoData.Data
 
         public byte[] ReadBuffer(int offset, int count)
         {
-            // TODO Реализовать безопасное чтение буфера из разных нитей
+            // TODO Реализовать проверку параметр для чтения буфера
 
             var data = Stream;
 
-            var reader = new BinaryReader(data);
-            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+            // TODO Реализовать безопасное чтение буфера из разных нитей
+            lock (stream)
+            {
+                var reader = new BinaryReader(data);
+                reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
-            return reader.ReadBytes(count);
+                return reader.ReadBytes(count);
+            }
         }
     }
 }

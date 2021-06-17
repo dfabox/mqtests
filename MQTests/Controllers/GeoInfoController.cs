@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using GeoData.Search;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace MQTests.Controllers
 {
@@ -11,25 +9,31 @@ namespace MQTests.Controllers
     [Route("[controller]")]
     public class GeoInfoController : ControllerBase
     {
-        private readonly ILogger<GeoInfoController> _logger;
+        private readonly ILogger<GeoInfoController> logger;
+        private readonly IGeoSearch geoSearch;
 
-        public GeoInfoController(ILogger<GeoInfoController> logger)
+        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoSearch geoSearch)
         {
-            _logger = logger;
+            this.logger = logger;
+            this.geoSearch = geoSearch;
         }
 
         [HttpGet]
         [Route("~/ip/location")]
         public string GetIpLocation(string ip)
         {
-            return null;
+            var position = geoSearch?.GeoPositionFromIp(ip);
+
+            return JsonConvert.SerializeObject(position);
         }
 
         [HttpGet]
         [Route("~/city/locations")]
         public string GetCityLocation(string city)
         {
-            return null;
+            var position = geoSearch?.GeoPositionFromCity(city);
+
+            return JsonConvert.SerializeObject(position);
         }
     }
 }
