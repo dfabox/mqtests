@@ -35,21 +35,22 @@ namespace DataLoadTests
 
             Console.WriteLine($"t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            //TestCity(geoBase);
+            TestCity(geoBase);
         }
 
         static void Main(string[] args)
         {
             // Выделить размер памяти для загрузки файла
-            //var baseFileName = GetLocalBaseFileName();
-            //var info = new FileInfo(baseFileName);
-            //var allocBuffer = new byte[info.Length];
+            var baseFileName = GetLocalBaseFileName();
+            var info = new FileInfo(baseFileName);
+            var allocBuffer = new byte[info.Length* 3];
 
             TestGeoBase<GeoLocalFile>();
             TestGeoBase<GeoResourceFile>();
             TestGeoBase<GeoMappedFile>();
 
-            //allocBuffer = null;
+            var b1 = allocBuffer[0];
+            Console.WriteLine(b1);
             Console.ReadKey();
         }
     }
