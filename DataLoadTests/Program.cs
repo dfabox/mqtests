@@ -10,12 +10,14 @@ namespace DataLoadTests
     {
         private const int TEST_COUNT = 100000;
 
-        private static void TestCity1(IGeoBase geoBase, uint pos)
+        private static bool TestCity1(IGeoBase geoBase, uint pos)
         {
             var location = geoBase.GetLocationAt(pos);
 
             var city = location.City; // "cit_Ula";
-            var location1 = geoBase.FindLocationByCity(city);
+            var result = geoBase.FindLocationByCity(city);
+
+            return result.Status == SearchResultStatus.Success;
         }
 
         private static void TestCity(IGeoBase geoBase)
@@ -37,9 +39,9 @@ namespace DataLoadTests
         {
             var ipRange = geoBase.GetIpRangeAt(Convert.ToUInt32(index));
 
-            var location1 = geoBase.FindLocationByIp(ipRange.IpFrom + 1);
+            var result = geoBase.FindLocationByIp(ipRange.IpFrom + 1);
 
-            return location1 != null;
+            return result.Status == SearchResultStatus.Success;
         }
 
         private static void TestIp(IGeoBase geoBase)

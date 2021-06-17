@@ -26,7 +26,6 @@ namespace GeoData.Data
             if (index < 0 || index >= Header.Records)
                 throw new IndexOutOfRangeException();
 
-            // TODO Возможно потребуется оптимизация "конвертации" буфера в структуру элемента
             var buffer = ReadBuffer(offset + index * size, size);
 
             if (buffer == null)
@@ -113,6 +112,7 @@ namespace GeoData.Data
         private static long BinarySearchIp(IGeoBase geoFile, uint ipValue, uint left, uint right)
         {
             // Последний просмотренный элемент
+            // TODO Можно оптимизировать, если при поиске читать не весь объект, а только границы
             BaseIpRange ipRange;
 
             // Пока не сошлись границы массива
@@ -129,18 +129,16 @@ namespace GeoData.Data
                 }
                 else if (ipValue < ipRange.IpFrom)
                 {
-                    //сужаем рабочую зону массива с правой стороны
+                    // Сужаем рабочую зону массива с правой стороны
                     right = middle - 1;
                 }
                 else
                 {
-                    //сужаем рабочую зону массива с левой стороны
+                    // Сужаем рабочую зону массива с левой стороны
                     left = middle + 1;
                 }
             }
-            // Или нашли точное совпадение с IpFrom или диапазон включающий
-
-            //ничего не нашли
+            // Ничего не нашли
             return -1;
         }
 
