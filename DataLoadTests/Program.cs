@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using static GeoData.Base.BaseConsts;
+using GeoData.Common;
 using GeoData.Data;
 using System.IO;
 
@@ -15,6 +16,8 @@ namespace DataLoadTests
             var location = geoBase.GetLocationAt(pos);
 
             var city = location.City; // "cit_Ula";
+            var city1 = BaseUtils.GetBytesFromStringLen(city, 32, '\0');
+
             var result = geoBase.FindLocationByCity(city);
 
             return result.Status == SearchResultStatus.Success;
@@ -23,7 +26,7 @@ namespace DataLoadTests
         private static void TestCity(IGeoBase geoBase)
         {
             var random = new Random();
-            var w1 = Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
 
             for (var i = 0; i < TEST_COUNT; i++)
             {
@@ -31,8 +34,8 @@ namespace DataLoadTests
                 TestCity1(geoBase, pos);
             }
 
-            w1.Stop();
-            Console.WriteLine($"t: {w1.ElapsedMilliseconds}");
+            sw.Stop();
+            Console.WriteLine($"t: {sw.ElapsedMilliseconds}");
         }
 
         private static bool TestIp1(IGeoBase geoBase, int index)
@@ -47,7 +50,7 @@ namespace DataLoadTests
         private static void TestIp(IGeoBase geoBase)
         {
             var random = new Random();
-            var w1 = Stopwatch.StartNew();
+            var sw = Stopwatch.StartNew();
 
             var successCount = 0;
             for (var i = 0; i < TEST_COUNT; i++)
@@ -58,8 +61,10 @@ namespace DataLoadTests
                     successCount += 1;
             }
 
-            w1.Stop();
-            Console.WriteLine($"t: {w1.Elapsed.TotalMilliseconds}, success: {successCount}");
+            sw.Stop();
+            var ms = sw.Elapsed.TotalMilliseconds;
+
+            Console.WriteLine($"t: {ms}, success: {successCount}");
         }
 
         public static T GetObject<T>(Type objType = null)
@@ -76,8 +81,8 @@ namespace DataLoadTests
 
             Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            //TestCity(geoBase);
-            TestIp(geoBase);
+            TestCity(geoBase);
+            //TestIp(geoBase);
         }
 
         static void Main(string[] args)

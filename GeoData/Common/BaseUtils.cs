@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace GeoData.Common
 {
@@ -78,6 +79,27 @@ namespace GeoData.Common
             //Buffer.BlockCopy(bytes, 0, chars, 0, lenght);
 
             return new string(chars).Trim().Trim('\0');
+        }
+
+        /// <summary>
+        /// Преобразование строки в массив байтов с ограничением размера
+        /// </summary>
+        /// <param name="value">строка</param>
+        /// <param name="size">размер массива</param>
+        /// <param name="right">заполнитель</param>
+        /// <returns></returns>
+        public static byte[] GetBytesFromStringLen(string value, int size, char right)
+        {
+            value ??= "";
+
+            var result = Encoding.ASCII.GetBytes(new string(right, size));
+            var len = Math.Min(size, value.Length);
+
+            var chars = value.ToCharArray(0, len);
+            for (var i = 0; i < len; i++)
+                result[i] = (byte)chars[i];
+
+            return result;
         }
 
         /// <summary>

@@ -9,6 +9,8 @@ namespace GeoData.Data
         public BaseGeoLocation GetLocationAt(uint index);
         public BaseIpRange GetIpRangeAt(uint index);
         public BaseCityIndex GetCityIndexAt(uint index);
+        public uint GetCityAddressAt(uint index);
+        public string GetCityFromAddress(uint address);
 
         public BaseIpRange FindRangeByIp(uint ip);
         public SearchResult FindLocationByIp(uint ip);

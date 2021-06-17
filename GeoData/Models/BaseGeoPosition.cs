@@ -10,6 +10,8 @@ namespace GeoData.Models
     public class BaseGeoLocation
     {
         public const uint SIZE = 96;
+        public const uint CITY_OFFSET = 32;
+        public const uint CITY_SIZE = 24;
 
         public string Country { get; private set; }       // 0 8 название страны (случайная строка с префиксом "cou_")
         public string Region { get; private set; }        // 8 12 название области (случайная строка с префиксом "reg_")
