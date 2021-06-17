@@ -16,7 +16,7 @@ namespace GeoData.Data
                 return null;
 
             var names = assembly.GetManifestResourceNames();
-            var name = names.FirstOrDefault(o => o.EndsWith(resourceName));
+            var name = names.FirstOrDefault(o => o.ToLower().EndsWith(resourceName.ToLower()));
 
             if (name == null)
                 return null;

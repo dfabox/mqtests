@@ -9,7 +9,7 @@ namespace GeoData.Models
     /// </summary>
     public class BaseHeader
     {
-        public const int SIZE = 60;
+        public const uint SIZE = 60;
 
         public int Version { get; private set; }           // 0 4 версия база данных
         public string Name { get; private set; }           // 4 32 название/префикс для базы данных

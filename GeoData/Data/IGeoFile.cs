@@ -6,6 +6,6 @@ namespace GeoData.Data
     {
         public BaseHeader Header { get; }
 
-        public byte[] ReadBuffer(int offset, int count);
+        public byte[] ReadBuffer(uint offset, uint count);
     }
 }

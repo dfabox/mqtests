@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using GeoData.Data;
+using GeoData.Search;
 
 namespace DataLoadTests
 
@@ -14,26 +15,24 @@ namespace DataLoadTests
             DateTime t0;
 
             t0 = DateTime.Now;
-
             using var baseFile1 = new GeoLocalFile();
             var h1 = baseFile1.Header;
-            var s1 = DateTime.Now - t0;
+            var s0 = DateTime.Now - t0;
 
             t0 = DateTime.Now;
-            using var baseFile2 = new GeoResourceFile();
-            var h2 = baseFile1.Header;
-            var s2 = DateTime.Now - t0;
+            using var baseFile = new GeoResourceFile();
+            var h = baseFile.Header;
+            var s1 = DateTime.Now - t0;
 
-            //using var header = MemoryMappedFile.CreateFromFile(basePath.FilePath, FileMode.Open, null, capacity: 0, access: MemoryMappedFileAccess.Read);
+            Console.WriteLine($"r: {s1.Milliseconds}, f: {s0.Milliseconds}");
 
-            //using var baseFile1 = MemoryMappedFile.CreateFromFile(basePath.FilePath, FileMode.Open, null, capacity: 0, access: MemoryMappedFileAccess.Read);
-            //var s2 = DateTime.Now - t0;
-            //using var mappedFile = MemoryMappedFile.CreateFromFile(fileStream: baseFile, null, 0, MemoryMappedFileAccess.Read, HandleInheritability.None, true);
-            var s3 = DateTime.Now - t0;
+            Console.WriteLine($"n1: {h.Name}, v1: {h.Version}");
 
-            Console.WriteLine($"f: {s1}, r: {s2}, {s3}");
+            var search = new GeoSearch(baseFile);
+            var p1 = search.GetPositionAt(1);
 
-            Console.WriteLine($"n1: {h1.Name}, v1: {h1.Version}");
+            Console.WriteLine($"n: {p1.City}");
+
             Console.ReadKey();
         }
     }

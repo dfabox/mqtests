@@ -22,7 +22,7 @@ namespace GeoData.Common
             var chars = bytes.Select(o => (char)o).ToArray(); //new char[lenght];
             //Buffer.BlockCopy(bytes, 0, chars, 0, lenght);
 
-            return new string(chars).Trim();
+            return new string(chars).Trim().Trim('\0');
         }
 
         /// <summary>

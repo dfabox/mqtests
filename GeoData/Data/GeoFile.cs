@@ -67,7 +67,7 @@ namespace GeoData.Data
 
         protected abstract Stream GetStream();
 
-        public byte[] ReadBuffer(int offset, int count)
+        public byte[] ReadBuffer(uint offset, uint count)
         {
             // TODO Реализовать проверку параметр для чтения буфера
 
@@ -79,7 +79,7 @@ namespace GeoData.Data
                 var reader = new BinaryReader(data);
                 reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
-                return reader.ReadBytes(count);
+                return reader.ReadBytes(Convert.ToInt32(count));
             }
         }
     }
