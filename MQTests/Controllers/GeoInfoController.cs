@@ -20,20 +20,22 @@ namespace MQTests.Controllers
 
         [HttpGet]
         [Route("~/ip/location")]
-        public string GetIpLocation(string ip)
+        public string GetIpLocation(string text)
         {
-            var position = geoSearch?.GeoPositionFromIp(ip);
+            //var position = geoSearch?.GeoPositionFromIp(ip);
+            var result = new SearchResult($"Запрос данных по IP не реализован {text}");
 
-            return JsonConvert.SerializeObject(position);
+            return JsonConvert.SerializeObject(result);
         }
 
         [HttpGet]
         [Route("~/city/locations")]
-        public string GetCityLocation(string city)
+        public string GetCityLocation(string text)
         {
-            var position = geoSearch?.GeoPositionFromCity(city);
+            //var position = geoSearch?.GeoPositionFromCity(city);
+            var result = new SearchResult($"Запрос данных по городу не реализован {text}");
 
-            return JsonConvert.SerializeObject(position);
+            return JsonConvert.SerializeObject(result);
         }
     }
 }

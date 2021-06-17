@@ -9,8 +9,6 @@ namespace GeoData.Data
     /// </summary>
     public abstract class GeoFile : IGeoFile, IDisposable
     {
-        private bool Lock = false;
-
         private Stream stream;
         protected Stream Stream
         {
