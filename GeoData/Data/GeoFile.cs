@@ -82,7 +82,7 @@ namespace GeoData.Data
             var t0 = DateTime.Now;
             BaseGeoLocation location = null;
 
-            if (uint.TryParse(ip, out var ipInt))
+            if (uint.TryParse(ip, out var ipValue))
             {
                 lock (file)
                 {
@@ -90,7 +90,7 @@ namespace GeoData.Data
                     for (uint i = 0; i < Header.Records; i++)
                     {
                         var item = GetIpRangeAt(i);
-                        if (item.IpFrom <= ipInt && ipInt <= item.IpTo)
+                        if (item.IpFrom <= ipValue && ipValue <= item.IpTo)
                         {
                             location = GetLocationAt(item.LocationIndex);
                             break;
@@ -101,6 +101,34 @@ namespace GeoData.Data
 
             var result = new SearchResult(location, t0);
             return result;
+        }
+
+        //метод бинарного поиска с использованием цикла
+        static long BinarySearchIp(IGeoFile geoFile, uint ipValue, uint left, uint right)
+        {
+            //пока не сошлись границы массива
+            while (left <= right)
+            {
+                //индекс среднего элемента
+                var middle = (left + right) / 2;
+
+                if (ipValue == geoFile.GetIpRangeAt(middle).IpFrom)
+                {
+                    return middle;
+                }
+                else if (ipValue < geoFile.GetIpRangeAt(middle).IpFrom)
+                {
+                    //сужаем рабочую зону массива с правой стороны
+                    right = middle - 1;
+                }
+                else
+                {
+                    //сужаем рабочую зону массива с левой стороны
+                    left = middle + 1;
+                }
+            }
+            //ничего не нашли
+            return -1;
         }
 
         #region IDisposable
