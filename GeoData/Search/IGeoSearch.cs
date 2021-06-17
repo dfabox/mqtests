@@ -4,7 +4,7 @@ namespace GeoData.Search
 {
     public interface IGeoSearch
     {
-        public SearchResult GeoPositionFromIp(string ip);
-        public SearchResult GeoPositionFromCity(string city);
+        public SearchResult GeoLocationByIp(string ip);
+        public SearchResult GeoLocationByCity(string city);
     }
 }

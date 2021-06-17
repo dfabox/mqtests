@@ -6,7 +6,7 @@ namespace GeoData.Search
     {
         public SearchResultStatus Status { get; set; }
         public string Msg { get; set; }
-        public BaseGeoLocation Position { get; set; }
+        public BaseGeoLocation Location { get; set; }
 
         public SearchResult(string errorMsg)
         {
@@ -14,10 +14,10 @@ namespace GeoData.Search
             Msg = errorMsg;
         }
 
-        public SearchResult(BaseGeoLocation position)
+        public SearchResult(BaseGeoLocation location)
         {
-            Status = position == null ? SearchResultStatus.NotFound : SearchResultStatus.Success;
-            this.Position = position;
+            Status = location == null ? SearchResultStatus.NotFound : SearchResultStatus.Success;
+            Location = location;
         }
     }
 }

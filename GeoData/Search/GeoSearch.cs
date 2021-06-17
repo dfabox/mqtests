@@ -27,7 +27,7 @@ namespace GeoData.Search
             return buffer;
         }
 
-        public BaseGeoLocation GetPositionAt(uint index)
+        public BaseGeoLocation GetLocationAt(uint index)
         {
             var buffer = GetBufferAt(index, Header.OffsetLocations, BaseGeoLocation.SIZE);
 
@@ -48,12 +48,12 @@ namespace GeoData.Search
             return new BaseCityIndex(buffer);
         }
 
-        public SearchResult GeoPositionFromCity(string city)
+        public SearchResult GeoLocationByCity(string city)
         {
             throw new NotImplementedException();
         }
 
-        public SearchResult GeoPositionFromIp(string ip)
+        public SearchResult GeoLocationByIp(string ip)
         {
             throw new NotImplementedException();
         }
