@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using static GeoData.Base.BaseConsts;
-using GeoData.Common;
 using GeoData.Data;
 using System.IO;
 
@@ -81,21 +80,21 @@ namespace DataLoadTests
             using var geoBase = GetObject<T>();
             var h = geoBase.Header;
 
-            //for (uint i = 200; i < 350; i++)
-            //{
-            //    var address = geoBase.GetCityAddressAt(i);
-            //    var city = geoBase.GetCityFromAddress(address);
-            //    var location = geoBase.GetLocationFromAddress(address);
+            for (uint i = 200; i < 350; i++)
+            {
+                var address = geoBase.GetCityAddressAt(i);
+                var city = geoBase.GetCityFromAddress(address);
+                var location = geoBase.GetLocationFromAddress(address);
 
-            //    Console.WriteLine($"c: {city}, cl: {location.City}, addr: {address}");
-            //}
+                Console.WriteLine($"a: {address}, c: {location.City}, p: {location.Postal}, o: {location.Organization}");
+            }
 
             w1.Stop();
 
             Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            TestCity(geoBase);
-            TestIp(geoBase);
+            //TestCity(geoBase);
+            //TestIp(geoBase);
         }
 
         static void Main(string[] args)

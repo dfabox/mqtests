@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using GeoData.Common;
 using GeoData.Models;
@@ -75,9 +76,6 @@ namespace GeoData.Data
             var buffer = ReadBuffer(Header.OffsetLocations + address + BaseGeoLocation.CITY_OFFSET, BaseGeoLocation.CITY_SIZE);
             var result = buffer.GetStringFromBytes(0, Convert.ToInt32(BaseGeoLocation.CITY_SIZE));
 
-            var buffer2 = ReadBuffer(Header.OffsetLocations + address, BaseGeoLocation.SIZE);
-            var location = new BaseGeoLocation(buffer2);
-
             return result;
         }
 
@@ -85,15 +83,36 @@ namespace GeoData.Data
         {
             var sw = Stopwatch.StartNew();
 
-            BaseGeoLocation location = null;
+            ICollection<BaseGeoLocation> locations = null;
 
             // TODO Оптимизировать сравнением не строк а массивов?
+            // Результат - индекс адреса, НЕ местоположения
             var index = BinarySearchCity(this, city, 0, Convert.ToUInt32(Header.Records - 1));
             if (index >= 0)
-                location = GetLocationAt(Convert.ToUInt32(index));
+            {
+                // Найден один город, но могут быть повторы вверх или вниз по индексу
+                // Найти минимальный и максимальный индексы для найденного города
+                var index1 = Convert.ToUInt32(index - 1);
+                while (index1 > 0 && EqualCityAt(this, city, Convert.ToUInt32(index1)) == 0)
+                    index1--;
+                var minIndex = index1 + 1;
+
+                index1 = Convert.ToUInt32(index + 1);
+                while (index1 < Header.Records && EqualCityAt(this, city, Convert.ToUInt32(index1)) == 0)
+                    index1++;
+                var maxIndex = index1 - 1;
+
+                locations = new List<BaseGeoLocation>();
+                for (var i = minIndex; i <= maxIndex; i++)
+                {
+                    var address = GetCityAddressAt(i);
+                    var location = GetLocationFromAddress(address);
+                    locations.Add(location);
+                }
+            }
 
             sw.Stop();
-            var result = new SearchResult(location, sw);
+            var result = new SearchResult(locations, sw);
             return result;
         }
 
@@ -112,7 +131,7 @@ namespace GeoData.Data
             if (uint.TryParse(ip, out var ipValue))
                 return FindLocationByIp(ipValue);
             else
-                return new SearchResult(null, null);
+                return new SearchResult((BaseGeoLocation)null, null);
         }
 
         public SearchResult FindLocationByIp(uint ip)
@@ -164,6 +183,16 @@ namespace GeoData.Data
             return -1;
         }
 
+        private static int EqualCityAt(IGeoBase geoBase, string city, uint index)
+        {
+            var address = geoBase.GetCityAddressAt(index);
+            var city1 = geoBase.GetCityFromAddress(address);
+
+            var compare = string.Compare(city, city1);
+
+            return compare;
+        }
+
         // Бинарный поиск города
         private static long BinarySearchCity(IGeoBase geoBase, string city, uint left, uint right)
         {
@@ -173,10 +202,7 @@ namespace GeoData.Data
                 // Индекс среднего элемента
                 var middle = (left + right) / 2;
 
-                var address = geoBase.GetCityAddressAt(middle);
-                var city1 = geoBase.GetCityFromAddress(address);
-
-                var compare = string.Compare(city, city1);
+                var compare = EqualCityAt(geoBase, city, middle);
                 if (compare == 0)
                 {
                     return middle;

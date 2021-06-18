@@ -24,5 +24,12 @@ namespace GeoData.Data
             Locations = new List<BaseGeoLocation> { location };
             TimeMs = sw?.Elapsed.TotalMilliseconds ?? 0;
         }
+
+        public SearchResult(ICollection<BaseGeoLocation> locations, Stopwatch sw)
+        {
+            Status = locations == null && locations.Count > 0 ? SearchResultStatus.NotFound : SearchResultStatus.Success;
+            Locations = locations;
+            TimeMs = sw?.Elapsed.TotalMilliseconds ?? 0;
+        }
     }
 }

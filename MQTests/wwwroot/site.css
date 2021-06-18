@@ -52,12 +52,10 @@
 
 .panel-result {
     background-color: lightgreen;
-    height: 200px;
 }
 
 .panel-error {
     background-color: lightcoral;
-    height: 200px;
 }
 
 .result-table {

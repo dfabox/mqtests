@@ -78,7 +78,7 @@ function getResultInfo(json) {
         // Формирование таблицы со списком найденных локаций
         result += '<br>Список:<br>';
 
-        var table = '<table width="100%" class="result-table">';
+        var table = '<table width="100%" class="result-table" cellpadding="5">';
         // Шапка
 
         table += '<tr class="tr-head">';
