@@ -5,19 +5,81 @@
     <title>Тестирование</title>
 </head>
 <body>
-    <div class="title">Тестирование</div>
+    <div class="title" style="padding-left: 50px;">Тестирование</div>
     <div id="panelCity" class="panel panel-param">
         <label>Количество запросов:</label><br>
-        <input id="reqCount" type="text" />
+        <input id="reqCount" type="text" value="10" />
 
-        <button type="button" onclick="doTest();">
+        <button type="button" onclick="doApiTest();">
             Запустить тест
         </button>
+        <br>
+        <div id="testResult"></div>
+        <div id="totalTime"></div>
     </div>
 
     <script style="display: none;">
 
-        function doTest(mode, data) {
+        async function doApiTest() {
+            startTime = new Date();
+
+            document.getElementById('testResult').innerHTML = "";
+            document.getElementById('totalTime').innerHTML = "";
+
+            const reqCount = document.getElementById('reqCount');
+            const count = reqCount ? reqCount.value : 10;
+
+            response = await fetch('/test/rndip?count=' + count.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const ipList = await response.json();
+            console.log('ipList:', JSON.stringify(ipList));
+
+            response = await fetch('/test/rndcity?count=' + count.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const cityList = await response.json();
+            console.log('cityList:', JSON.stringify(cityList));
+
+            var totalTimeMs = { value: 0.0, count: 0 }
+
+            ipList.Items.forEach(function (item, index) {
+                doTest('Ip', item, totalTimeMs);
+            });
+
+            cityList.Items.forEach(function (item, index) {
+                doTest('City', item, totalTimeMs);
+            });
+
+            endTime = new Date();
+            var timeDiff = endTime - startTime; //in ms
+
+            // get seconds 
+            var seconds = Math.round(timeDiff);
+
+            document.getElementById('testResult').innerHTML =
+                'время запросов: ' + timeDiff.toString() ;
+        }
+
+        async function getTestValues(id, count) {
+            const response = await fetch('/test/' + id + '?count=' + count.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const json = await response.json();
+
+            return json.Items;
+        }
+
+        async function doTest(mode, data, totalTimeMs) {
             const url = (mode == 'Ip' ? '/ip/location' : mode == 'City' ? '/city/locations' : 'error')
                 + '?text=' + encodeURI(data);
             console.log(url);
@@ -32,18 +94,13 @@
                 const json = await response.json();
                 console.log('Успех:', JSON.stringify(json));
 
-                if (json.Status == 3) {
-                    showError(json.Msg);
-                    alert(json.Msg);
-                }
-                else {
-                    const info = getResultInfo(json);
-                    document.getElementById('searchResult').innerHTML = info;
-                    document.getElementById('searchResult').style.display = "block";
-                }
+                totalTimeMs.value += json.TimeMs;
+                totalTimeMs.count += 1;
+                document.getElementById('totalTime').innerHTML =
+                    'обработано: ' + totalTimeMs.count.toString() + ', время поиска: ' + totalTimeMs.value.toString() + ' мс';
+
             } catch (error) {
                 console.error('Ошибка:', error);
-                showError(error);
             }
         }
 </script>
