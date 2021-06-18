@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using GeoData.Models;
 
@@ -10,6 +9,7 @@ namespace GeoData.Data
         public SearchResultStatus Status { get; private set; }
         public string Msg { get; private set; }
         public ICollection<BaseGeoLocation> Locations { get; private set; }
+        public int LocationCount => Locations?.Count ?? 0;
         public double TimeMs { get; private set; }
 
         public SearchResult(string errorMsg)

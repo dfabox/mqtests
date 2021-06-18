@@ -3,7 +3,7 @@
 }
 
 #wrap {
-    width: 600px;
+    width: 800px;
     margin: 0 auto;
     height: 200px;
 }
@@ -15,7 +15,7 @@
 
 #right_col {
     float: right;
-    width: 400px;
+    width: 600px;
 }
 
 .title {
@@ -58,4 +58,15 @@
 .panel-error {
     background-color: lightcoral;
     height: 200px;
+}
+
+.result-table {
+    font-size: 85%;
+    background-color: white;
+}
+
+.tr-head {
+    font-weight: 600;
+    font-size: 85%;
+    background-color: #ddd;
 }

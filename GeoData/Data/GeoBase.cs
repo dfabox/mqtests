@@ -86,12 +86,9 @@ namespace GeoData.Data
             var sw = Stopwatch.StartNew();
 
             BaseGeoLocation location = null;
-            long index;
-            lock (file)
-            {
-                // TODO Оптимизировать сравнением не строк а массивов?
-                index = BinarySearchCity(this, city, 0, Convert.ToUInt32(Header.Records - 1));
-            }
+
+            // TODO Оптимизировать сравнением не строк а массивов?
+            var index = BinarySearchCity(this, city, 0, Convert.ToUInt32(Header.Records - 1));
             if (index >= 0)
                 location = GetLocationAt(Convert.ToUInt32(index));
 
@@ -102,11 +99,7 @@ namespace GeoData.Data
 
         public BaseIpRange FindRangeByIp(uint ip)
         {
-            long index;
-            lock (file)
-            {
-                index = BinarySearchIp(this, ip, 0, Convert.ToUInt32(IP_RANGE_COUNT - 1));
-            }
+            var index = BinarySearchIp(this, ip, 0, Convert.ToUInt32(IP_RANGE_COUNT - 1));
 
             if (index >= 0)
                 return GetIpRangeAt(Convert.ToUInt32(index));

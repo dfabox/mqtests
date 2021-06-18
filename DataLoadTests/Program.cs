@@ -94,7 +94,7 @@ namespace DataLoadTests
 
             Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            //TestCity(geoBase);
+            TestCity(geoBase);
             TestIp(geoBase);
         }
 

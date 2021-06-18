@@ -25,10 +25,13 @@ async function getGeoData(mode, data) {
         return;
     }
 
+    // Скрыть результаты предыдущего поиска и ошибки
+    document.getElementById('searchResult').style.display = "none";
+    document.getElementById('searchError').style.display = "none";
 
+    // Запрос
     const url = (mode == 'Ip' ? '/ip/location' : mode == 'City' ? '/city/locations' : 'error')
         + '?text=' + encodeURI(data);
-
     console.log(url);
 
     try {
@@ -39,23 +42,71 @@ async function getGeoData(mode, data) {
             }
         });
         const json = await response.json();
-        const table = getTableResult(json);
-
         console.log('Успех:', JSON.stringify(json));
-        console.log('Таблица:', table);
 
-        document.getElementById('searchResult').innerHTML = JSON.stringify(json);
+        if (json.Status == 3) {
+            showError(json.Msg);
+            alert(json.Msg);
+        }
+        else {
+            const info = getResultInfo(json);
+            document.getElementById('searchResult').innerHTML = info;
+
+            document.getElementById('searchResult').style.display = "block";
+        }
     } catch (error) {
         console.error('Ошибка:', error);
+        showError(error);
     }
 }
 
-function getTableResult(json) {
-    // Формирование таблицы со списком найденных локаций
+function showError(error) {
+    document.getElementById('searchError').innerHTML = error;
+    document.getElementById('searchError').style.display = "block";
+}
 
-    var result = "<table>";
+function addColumn(value) {
+    return '<td>' + value + '</td>';
+}
 
-    result += "</table>";
+function getResultInfo(json) {
+
+    var result = json.Status == 1 ? 'Найдено местоположений: ' + json.LocationCount : 'Данные не найдены';
+    result += '<br>';
+
+    if (json.Status == 1 && json.LocationCount > 0 && json.Locations) {
+        // Формирование таблицы со списком найденных локаций
+        result += '<br>Список:<br>';
+
+        var table = '<table width="100%" class="result-table">';
+        // Шапка
+
+        table += '<tr class="tr-head">';
+        table += addColumn('Страна');
+        table += addColumn('Регион');
+        table += addColumn('Индекс');
+        table += addColumn('Город');
+        table += addColumn('Организация');
+        table += addColumn('Координаты');
+        table += '</tr>';
+
+        json.Locations.forEach(function (item, index) {
+            console.log(item);
+
+            table += '<tr>';
+            table += addColumn(item.Country);
+            table += addColumn(item.Region);
+            table += addColumn(item.Postal);
+            table += addColumn(item.City);
+            table += addColumn(item.Organization);
+            table += addColumn('(' + item.Latitude + ', ' + item.Longitude + ')');
+            table += '</tr>';
+        });
+
+        table += '</table>';
+
+        result += table;
+    }
 
     return result;
 }

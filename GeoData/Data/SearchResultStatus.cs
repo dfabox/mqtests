@@ -2,6 +2,9 @@
 {
     public enum SearchResultStatus
     {
-        None, Success, NotFound, Error,
+        None = 0,
+        Success = 1,
+        NotFound = 2,
+        Error = 3,
     }
 }
