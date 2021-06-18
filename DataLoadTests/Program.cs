@@ -9,7 +9,7 @@ namespace DataLoadTests
 {
     class Program
     {
-        private const int TEST_COUNT = 1000;
+        private const int TEST_COUNT = 100000;
 
         private static bool TestCity1(IGeoBase geoBase, uint pos)
         {
@@ -80,12 +80,22 @@ namespace DataLoadTests
             var w1 = Stopwatch.StartNew();
             using var geoBase = GetObject<T>();
             var h = geoBase.Header;
+
+            //for (uint i = 200; i < 350; i++)
+            //{
+            //    var address = geoBase.GetCityAddressAt(i);
+            //    var city = geoBase.GetCityFromAddress(address);
+            //    var location = geoBase.GetLocationFromAddress(address);
+
+            //    Console.WriteLine($"c: {city}, cl: {location.City}, addr: {address}");
+            //}
+
             w1.Stop();
 
             Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            TestCity(geoBase);
-            //TestIp(geoBase);
+            //TestCity(geoBase);
+            TestIp(geoBase);
         }
 
         static void Main(string[] args)
@@ -95,9 +105,9 @@ namespace DataLoadTests
             var info = new FileInfo(baseFileName);
             var allocBuffer = new byte[info.Length* 3];
 
-            //TestGeoBase<GeoLocalFile>();
+            //TestGeoBase<GeoLocalBase>();
             TestGeoBase<GeoResourceBase>();
-            //TestGeoBase<GeoMappedFile>();
+            //TestGeoBase<GeoMappedBase>();
 
             var b1 = allocBuffer[0];
             Console.WriteLine(b1);

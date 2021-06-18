@@ -14,6 +14,7 @@ namespace GeoData.Data
 
         public BaseIpRange FindRangeByIp(uint ip);
         public SearchResult FindLocationByIp(uint ip);
+        public SearchResult FindLocationByIp(string ip);
         public SearchResult FindLocationByCity(string city);
     }
 }

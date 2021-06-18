@@ -21,7 +21,7 @@ namespace GeoData.Data
             // TODO Реализовать проверку параметров для чтения буфера
 
             var reader = new BinaryReader(stream);
-            reader.BaseStream.Seek(offset, SeekOrigin.Begin);
+            var pos = reader.BaseStream.Seek(offset, SeekOrigin.Begin);
 
             return reader.ReadBytes(Convert.ToInt32(count));
         }

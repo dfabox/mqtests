@@ -39,9 +39,24 @@ async function getGeoData(mode, data) {
             }
         });
         const json = await response.json();
+        const table = getTableResult(json);
 
         console.log('Успех:', JSON.stringify(json));
+
+        document.getElementById('searchResult').innerHTML = table;
     } catch (error) {
         console.error('Ошибка:', error);
     }
+}
+
+function getTableResult(json) {
+    // Формирование таблицы со списком найденных локаций
+
+    var result = "<table>";
+    const 
+    
+
+    result += "</table>";
+
+    return result;
 }

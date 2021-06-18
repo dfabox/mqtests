@@ -42,6 +42,13 @@ namespace GeoData.Data
             return new BaseGeoLocation(buffer);
         }
 
+        public BaseGeoLocation GetLocationFromAddress(uint address)
+        {
+            var buffer = ReadBuffer(Header.OffsetLocations + address, BaseGeoLocation.SIZE);
+
+            return new BaseGeoLocation(buffer);
+        }
+
         public BaseIpRange GetIpRangeAt(uint index)
         {
             var buffer = GetBufferAt(index, Header.OffsetRanges, BaseGeoLocation.SIZE);
@@ -66,8 +73,12 @@ namespace GeoData.Data
         public string GetCityFromAddress(uint address)
         {
             var buffer = ReadBuffer(Header.OffsetLocations + address + BaseGeoLocation.CITY_OFFSET, BaseGeoLocation.CITY_SIZE);
+            var result = buffer.GetStringFromBytes(0, Convert.ToInt32(BaseGeoLocation.CITY_SIZE));
 
-            return buffer.GetStringFromBytes(0, Convert.ToInt32(BaseGeoLocation.CITY_SIZE));
+            var buffer2 = ReadBuffer(Header.OffsetLocations + address, BaseGeoLocation.SIZE);
+            var location = new BaseGeoLocation(buffer2);
+
+            return result;
         }
 
         public SearchResult FindLocationByCity(string city)
@@ -101,6 +112,14 @@ namespace GeoData.Data
                 return GetIpRangeAt(Convert.ToUInt32(index));
             else
                 return null;
+        }
+
+        public SearchResult FindLocationByIp(string ip)
+        {
+            if (uint.TryParse(ip, out var ipValue))
+                return FindLocationByIp(ipValue);
+            else
+                return new SearchResult(null, null);
         }
 
         public SearchResult FindLocationByIp(uint ip)
