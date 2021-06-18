@@ -93,8 +93,8 @@ namespace DataLoadTests
 
             Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
 
-            //TestCity(geoBase);
-            //TestIp(geoBase);
+            TestCity(geoBase);
+            TestIp(geoBase);
         }
 
         static void Main(string[] args)
@@ -104,9 +104,9 @@ namespace DataLoadTests
             var info = new FileInfo(baseFileName);
             var allocBuffer = new byte[info.Length* 3];
 
-            //TestGeoBase<GeoLocalBase>();
+            TestGeoBase<GeoLocalBase>();
             TestGeoBase<GeoResourceBase>();
-            //TestGeoBase<GeoMappedBase>();
+            TestGeoBase<GeoMappedBase>();
 
             var b1 = allocBuffer[0];
             Console.WriteLine(b1);
