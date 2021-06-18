@@ -3,6 +3,9 @@ using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
+    /// <summary>
+    /// Реализация чтения файла данных из локальной папки проекта
+    /// </summary>
     public class GeoLocalBase : GeoStreamBase
     {
         public GeoLocalBase()

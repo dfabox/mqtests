@@ -3,14 +3,16 @@ using System.IO;
 
 namespace GeoData.Data
 {
-    public class GeoStreamBase : GeoBase
+    /// <summary>
+    /// Адбстракция файла данных на основе потока
+    /// </summary>
+    public abstract class GeoStreamBase : GeoBase
     {
         private Stream stream;
 
         protected void SetStream(Stream stream)
         {
             this.stream = stream;
-
             file = stream;
 
             LoadHeader();

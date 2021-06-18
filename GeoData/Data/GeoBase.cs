@@ -7,6 +7,9 @@ using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
+    /// <summary>
+    /// Абстрактная реализация механизмов поиска и получения данных на основе чтения буфера данных
+    /// </summary>
     public abstract class GeoBase : IGeoBase, IDisposable
     {
         public BaseHeader Header { get; private set; }

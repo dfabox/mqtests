@@ -26,7 +26,7 @@ namespace GeoData.Data
         /// <returns></returns>
         public SearchResult FindLocationByCity(string city);
 
-        #region Методы получения данных из блоков файла - для отладки/тестирования
+        #region Методы получения данных - для отладки/тестирования
         public BaseGeoLocation GetLocationAt(uint index);
         public BaseIpRange GetIpRangeAt(uint index);
         #endregion

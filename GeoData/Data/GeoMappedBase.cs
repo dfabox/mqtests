@@ -4,6 +4,9 @@ using static GeoData.Base.BaseConsts;
 
 namespace GeoData.Data
 {
+    /// <summary>
+    /// Реализация файла данных на основе отображаемого файла
+    /// </summary>
     public class GeoMappedBase : GeoBase
     {
         private MemoryMappedFile mmFile;

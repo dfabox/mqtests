@@ -5,6 +5,9 @@ using GeoData.Base;
 
 namespace GeoData.Data
 {
+    /// <summary>
+    /// Реализация чтения файла данных из ресурса сборки
+    /// </summary>
     public class GeoResourceBase: GeoStreamBase
     {
         public GeoResourceBase()
