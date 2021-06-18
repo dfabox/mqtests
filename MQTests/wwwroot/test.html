@@ -36,7 +36,7 @@
                 }
             });
             const ipList = await response.json();
-            console.log('ipList:', JSON.stringify(ipList));
+            //console.log('ipList:', JSON.stringify(ipList));
 
             response = await fetch('/test/rndcity?count=' + count.toString(), {
                 method: 'GET',
@@ -45,7 +45,7 @@
                 }
             });
             const cityList = await response.json();
-            console.log('cityList:', JSON.stringify(cityList));
+            //console.log('cityList:', JSON.stringify(cityList));
 
             var totalTimeMs = { value: 0.0, count: 0 }
 
@@ -82,7 +82,7 @@
         async function doTest(mode, data, totalTimeMs) {
             const url = (mode == 'Ip' ? '/ip/location' : mode == 'City' ? '/city/locations' : 'error')
                 + '?text=' + encodeURI(data);
-            console.log(url);
+            //console.log(url);
 
             try {
                 const response = await fetch(url, {
@@ -92,7 +92,7 @@
                     }
                 });
                 const json = await response.json();
-                console.log('Успех:', JSON.stringify(json));
+                //console.log('Успех:', JSON.stringify(json));
 
                 totalTimeMs.value += json.TimeMs;
                 totalTimeMs.count += 1;
