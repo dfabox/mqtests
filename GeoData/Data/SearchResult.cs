@@ -9,7 +9,7 @@ namespace GeoData.Data
     {
         public SearchResultStatus Status { get; private set; }
         public string Msg { get; private set; }
-        public ICollection<BaseGeoLocation> Location { get; private set; }
+        public ICollection<BaseGeoLocation> Locations { get; private set; }
         public double TimeMs { get; private set; }
 
         public SearchResult(string errorMsg)
@@ -21,7 +21,7 @@ namespace GeoData.Data
         public SearchResult(BaseGeoLocation location, Stopwatch sw)
         {
             Status = location == null ? SearchResultStatus.NotFound : SearchResultStatus.Success;
-            Location = new List<BaseGeoLocation> { location };
+            Locations = new List<BaseGeoLocation> { location };
             TimeMs = sw?.Elapsed.TotalMilliseconds ?? 0;
         }
     }
