@@ -41,5 +41,28 @@ namespace MQTests.Controllers
 
             return JsonConvert.SerializeObject(result);
         }
+
+        [HttpGet]
+        [Route("~/test/rndip")]
+        public string GetRandomIp()
+        {
+            return null;
+        }
+
+        [HttpGet]
+        [Route("~/test/rndcity")]
+        public string GetRandomCity()
+        {
+            var random = new Random();
+            var index = Convert.ToUInt32(random.Next(geoBase.Header.Records));
+
+            var successCount = 0;
+            for (var i = 0; i < TEST_COUNT; i++)
+            {
+
+                if (TestCity1(geoBase, pos))
+                    successCount += 1;
+            }
+        }
     }
 }

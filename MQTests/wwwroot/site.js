@@ -51,7 +51,6 @@ async function getGeoData(mode, data) {
         else {
             const info = getResultInfo(json);
             document.getElementById('searchResult').innerHTML = info;
-
             document.getElementById('searchResult').style.display = "block";
         }
     } catch (error) {
@@ -71,10 +70,11 @@ function addColumn(value) {
 
 function getResultInfo(json) {
 
-    var result = json.Status == 1 ? 'Успешный поиск' : 'Данные не найдены';
+    var result = json.Status == 1 ? 'Успешный поиск (' + json.TimeMs.toString() + ' мс )' : 'Данные не найдены';
 
     if (json.Status == 1 && json.Locations) {
         // Формирование таблицы со списком найденных локаций
+
         result += '<br>Список:<br>';
 
         var table = '<table width="100%" class="result-table" cellpadding="5">';

@@ -134,7 +134,10 @@ namespace GeoData.Data
                 location = GetLocationAt(ipRange.LocationIndex);
 
             sw.Stop();
-            var result = new SearchResult(location, sw);
+            var result = new SearchResult(location, sw)
+            {
+                IpRange = ipRange
+            };
             return result;
         }
 

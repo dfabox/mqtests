@@ -2,55 +2,50 @@
 <html lang="ru">
 <head>
     <meta charset="utf-8" />
-    <title>Поиск местоположения</title>
-    <link rel="stylesheet" href="site.css" />
+    <title>Тестирование</title>
 </head>
 <body>
-    <div id="wrap">
-        <div class="title">Определение месторасположения</div>
-        <div id="left_col">
-            <button id="btnIp" type="button" class="btn-panel selected" onclick="switchPanels('Ip', 'City');">
-                Поиск по IP
-            </button>
-            <br />
-            <button id="btnCity" type="button" class="btn-panel" onclick="switchPanels('City', 'Ip');">
-                Поиск по городу
-            </button>
-        </div>
-        <div id="right_col">
-            <div id="panelIp" class="panel panel-param search-ip">
-                <label>Введите ip-адрес для поиска:</label><br>
-                <input id="inputIp" type="text" />
+    <div class="title">Тестирование</div>
+    <div id="panelCity" class="panel panel-param">
+        <label>Количество запросов:</label><br>
+        <input id="reqCount" type="text" />
 
-                <button type="button" onclick="searchBy('Ip');">
-                    Искать
-                </button>
-            </div>
-
-            <div id="panelCity" class="panel panel-param search-city hide">
-                <label>Введите город для поиска:</label><br>
-                <input id="inputCity" type="text" />
-
-                <button type="button" onclick="searchBy('City');">
-                    Искать
-                </button>
-            </div>
-
-            <div class="panel panel-result">
-                <div class="title">Результат поиска</div>
-                <div id="searchResult"></div>
-            </div>
-
-            <div class="panel panel-error hide">
-                <div class="title">Ошибка поиска</div>
-                <div id="searchError"></div>
-            </div>
-        </div>
-
+        <button type="button" onclick="doTest();">
+            Запустить тест
+        </button>
     </div>
 
-    <script src="site.js"></script>
+    <script style="display: none;">
 
-    <script style="display: none;"></script>
+        function doTest(mode, data) {
+            const url = (mode == 'Ip' ? '/ip/location' : mode == 'City' ? '/city/locations' : 'error')
+                + '?text=' + encodeURI(data);
+            console.log(url);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const json = await response.json();
+                console.log('Успех:', JSON.stringify(json));
+
+                if (json.Status == 3) {
+                    showError(json.Msg);
+                    alert(json.Msg);
+                }
+                else {
+                    const info = getResultInfo(json);
+                    document.getElementById('searchResult').innerHTML = info;
+                    document.getElementById('searchResult').style.display = "block";
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError(error);
+            }
+        }
+</script>
 </body>
 </html>
