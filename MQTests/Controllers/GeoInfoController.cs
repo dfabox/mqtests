@@ -22,8 +22,13 @@ namespace MQTests.Controllers
         [Route("~/ip/location")]
         public string GetIpLocation(string text)
         {
-            var result = geoFile?.FindLocationByIp(text);
-            //var result = new SearchResult($"Запрос данных по IP не реализован {text}");
+            var ipText = text?.Replace(".", "");
+
+            SearchResult result;
+            if (uint.TryParse(ipText, out var ipValue))
+                result = geoFile?.FindLocationByIp(ipValue);
+            else
+                result = new SearchResult($"Некорректное значение ip-адреса {text}");
 
             return JsonConvert.SerializeObject(result);
         }
@@ -33,7 +38,6 @@ namespace MQTests.Controllers
         public string GetCityLocation(string text)
         {
             var result = geoFile?.FindLocationByCity(text);
-            //var result = new SearchResult($"Запрос данных по городу не реализован {text}");
 
             return JsonConvert.SerializeObject(result);
         }

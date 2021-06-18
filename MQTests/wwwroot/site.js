@@ -71,10 +71,9 @@ function addColumn(value) {
 
 function getResultInfo(json) {
 
-    var result = json.Status == 1 ? 'Найдено местоположений: ' + json.LocationCount : 'Данные не найдены';
-    result += '<br>';
+    var result = json.Status == 1 ? 'Успешный поиск' : 'Данные не найдены';
 
-    if (json.Status == 1 && json.LocationCount > 0 && json.Locations) {
+    if (json.Status == 1 && json.Locations) {
         // Формирование таблицы со списком найденных локаций
         result += '<br>Список:<br>';
 
@@ -105,7 +104,7 @@ function getResultInfo(json) {
 
         table += '</table>';
 
-        result += table;
+        result += '<br>' + table;
     }
 
     return result;

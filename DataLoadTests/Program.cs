@@ -80,14 +80,14 @@ namespace DataLoadTests
             using var geoBase = GetObject<T>();
             var h = geoBase.Header;
 
-            for (uint i = 200; i < 350; i++)
-            {
-                var address = geoBase.GetCityAddressAt(i);
-                var city = geoBase.GetCityFromAddress(address);
-                var location = geoBase.GetLocationFromAddress(address);
+            //for (uint i = 200; i < 350; i++)
+            //{
+            //    var address = geoBase.GetCityAddressAt(i);
+            //    var city = geoBase.GetCityFromAddress(address);
+            //    var location = geoBase.GetLocationFromAddress(address);
 
-                Console.WriteLine($"a: {address}, c: {location.City}, p: {location.Postal}, o: {location.Organization}");
-            }
+            //    Console.WriteLine($"a: {address}, c: {location.City}, p: {location.Postal}, o: {location.Organization}");
+            //}
 
             w1.Stop();
 

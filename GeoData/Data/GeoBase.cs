@@ -43,7 +43,7 @@ namespace GeoData.Data
             return new BaseGeoLocation(buffer);
         }
 
-        public BaseGeoLocation GetLocationFromAddress(uint address)
+        private BaseGeoLocation GetLocationFromAddress(uint address)
         {
             var buffer = ReadBuffer(Header.OffsetLocations + address, BaseGeoLocation.SIZE);
 
@@ -57,21 +57,14 @@ namespace GeoData.Data
             return new BaseIpRange(buffer);
         }
 
-        public BaseCityIndex GetCityIndexAt(uint index)
-        {
-            var buffer = GetBufferAt(index, Header.OffsetCities, BaseGeoLocation.SIZE);
-
-            return new BaseCityIndex(buffer);
-        }
-
-        public uint GetCityAddressAt(uint index)
+        private uint GetCityAddressAt(uint index)
         {
             var buffer = GetBufferAt(index, Header.OffsetCities, 4);
 
             return BitConverter.ToUInt32(buffer, 0);
         }
 
-        public string GetCityFromAddress(uint address)
+        private string GetCityFromAddress(uint address)
         {
             var buffer = ReadBuffer(Header.OffsetLocations + address + BaseGeoLocation.CITY_OFFSET, BaseGeoLocation.CITY_SIZE);
             var result = buffer.GetStringFromBytes(0, Convert.ToInt32(BaseGeoLocation.CITY_SIZE));
@@ -87,18 +80,18 @@ namespace GeoData.Data
 
             // TODO Оптимизировать сравнением не строк а массивов?
             // Результат - индекс адреса, НЕ местоположения
-            var index = BinarySearchCity(this, city, 0, Convert.ToUInt32(Header.Records - 1));
+            var index = BinarySearchCity(city, 0, Convert.ToUInt32(Header.Records - 1));
             if (index >= 0)
             {
                 // Найден один город, но могут быть повторы вверх или вниз по индексу
                 // Найти минимальный и максимальный индексы для найденного города
                 var index1 = Convert.ToUInt32(index - 1);
-                while (index1 > 0 && EqualCityAt(this, city, Convert.ToUInt32(index1)) == 0)
+                while (index1 > 0 && EqualCityAt(city, Convert.ToUInt32(index1)) == 0)
                     index1--;
                 var minIndex = index1 + 1;
 
                 index1 = Convert.ToUInt32(index + 1);
-                while (index1 < Header.Records && EqualCityAt(this, city, Convert.ToUInt32(index1)) == 0)
+                while (index1 < Header.Records && EqualCityAt(city, Convert.ToUInt32(index1)) == 0)
                     index1++;
                 var maxIndex = index1 - 1;
 
@@ -116,22 +109,14 @@ namespace GeoData.Data
             return result;
         }
 
-        public BaseIpRange FindRangeByIp(uint ip)
+        private BaseIpRange FindRangeByIp(uint ip)
         {
-            var index = BinarySearchIp(this, ip, 0, Convert.ToUInt32(IP_RANGE_COUNT - 1));
+            var index = BinarySearchIp(ip, 0, Convert.ToUInt32(IP_RANGE_COUNT - 1));
 
             if (index >= 0)
                 return GetIpRangeAt(Convert.ToUInt32(index));
             else
                 return null;
-        }
-
-        public SearchResult FindLocationByIp(string ip)
-        {
-            if (uint.TryParse(ip, out var ipValue))
-                return FindLocationByIp(ipValue);
-            else
-                return new SearchResult((BaseGeoLocation)null, null);
         }
 
         public SearchResult FindLocationByIp(uint ip)
@@ -151,7 +136,7 @@ namespace GeoData.Data
         }
 
         // Бинарный поиск ip
-        private static long BinarySearchIp(IGeoBase geoBase, uint ipValue, uint left, uint right)
+        private long BinarySearchIp(uint ipValue, uint left, uint right)
         {
             // TODO Можно оптимизировать, если при поиске читать не весь объект, а только границы
             BaseIpRange ipRange;
@@ -162,7 +147,7 @@ namespace GeoData.Data
                 // Индекс среднего элемента
                 var middle = (left + right) / 2;
 
-                ipRange = geoBase.GetIpRangeAt(middle);
+                ipRange = GetIpRangeAt(middle);
                 // Не точное значение, а попадание в диапазон
                 if (ipRange.IpFrom <= ipValue && ipValue <= ipRange.IpTo)
                 {
@@ -183,10 +168,16 @@ namespace GeoData.Data
             return -1;
         }
 
-        private static int EqualCityAt(IGeoBase geoBase, string city, uint index)
+        /// <summary>
+        /// Сравнение заданного названия города с городом на который указывает заданный индекс
+        /// </summary>
+        /// <param name="city">название города</param>
+        /// <param name="index">позиция в индексе</param>
+        /// <returns>результат сравнения строк</returns>
+        private int EqualCityAt(string city, uint index)
         {
-            var address = geoBase.GetCityAddressAt(index);
-            var city1 = geoBase.GetCityFromAddress(address);
+            var address = GetCityAddressAt(index);
+            var city1 = GetCityFromAddress(address);
 
             var compare = string.Compare(city, city1);
 
@@ -194,7 +185,7 @@ namespace GeoData.Data
         }
 
         // Бинарный поиск города
-        private static long BinarySearchCity(IGeoBase geoBase, string city, uint left, uint right)
+        private long BinarySearchCity(string city, uint left, uint right)
         {
             // Пока не сошлись границы массива
             while (left <= right)
@@ -202,7 +193,7 @@ namespace GeoData.Data
                 // Индекс среднего элемента
                 var middle = (left + right) / 2;
 
-                var compare = EqualCityAt(geoBase, city, middle);
+                var compare = EqualCityAt(city, middle);
                 if (compare == 0)
                 {
                     return middle;

@@ -4,13 +4,35 @@ using GeoData.Models;
 
 namespace GeoData.Data
 {
+    /// <summary>
+    /// Результат поиска данных
+    /// </summary>
     public class SearchResult
     {
+        /// <summary>
+        /// Статус поиска
+        /// </summary>
         public SearchResultStatus Status { get; private set; }
+
+        /// <summary>
+        /// Сообщение об ошибке (TODO некрасиво Exception показывать пользователю)
+        /// </summary>
         public string Msg { get; private set; }
+
+        /// <summary>
+        /// Список местоположений по запросу
+        /// </summary>
         public ICollection<BaseGeoLocation> Locations { get; private set; }
-        public int LocationCount => Locations?.Count ?? 0;
+
+        /// <summary>
+        /// Время выполнения поискового запроса
+        /// </summary>
         public double TimeMs { get; private set; }
+
+        /// <summary>
+        /// Найденный диапазон ip, если поиск по ip
+        /// </summary>
+        public BaseIpRange IpRange { get; set; }
 
         public SearchResult(string errorMsg)
         {

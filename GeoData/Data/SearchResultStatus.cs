@@ -2,9 +2,9 @@
 {
     public enum SearchResultStatus
     {
-        None = 0,
-        Success = 1,
-        NotFound = 2,
-        Error = 3,
+        None = 0,       // Неопределен
+        Success = 1,    // Успешный поиск
+        NotFound = 2,   // Данные по запросу не найдены
+        Error = 3,      // Ошибка выполнения поиска 
     }
 }
