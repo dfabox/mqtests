@@ -1,4 +1,6 @@
-﻿using GeoData.Data;
+﻿using System;
+using GeoData.Data;
+using static GeoData.Base.BaseConsts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,12 +12,12 @@ namespace MQTests.Controllers
     public class GeoInfoController : ControllerBase
     {
         private readonly ILogger<GeoInfoController> logger;
-        private readonly IGeoBase geoFile;
+        private readonly IGeoBase geoBase;
 
-        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoBase geoFile)
+        public GeoInfoController(ILogger<GeoInfoController> logger, IGeoBase geoBase)
         {
             this.logger = logger;
-            this.geoFile = geoFile;
+            this.geoBase = geoBase;
         }
 
         [HttpGet]
@@ -26,7 +28,7 @@ namespace MQTests.Controllers
 
             SearchResult result;
             if (uint.TryParse(ipText, out var ipValue))
-                result = geoFile?.FindLocationByIp(ipValue);
+                result = geoBase.FindLocationByIp(ipValue);
             else
                 result = new SearchResult($"Некорректное значение ip-адреса {text}");
 
@@ -37,7 +39,7 @@ namespace MQTests.Controllers
         [Route("~/city/locations")]
         public string GetCityLocation(string text)
         {
-            var result = geoFile?.FindLocationByCity(text);
+            var result = geoBase.FindLocationByCity(text);
 
             return JsonConvert.SerializeObject(result);
         }
@@ -46,7 +48,11 @@ namespace MQTests.Controllers
         [Route("~/test/rndip")]
         public string GetRandomIp()
         {
-            return null;
+            var random = new Random();
+            var index = Convert.ToUInt32(random.Next(geoBase.Header.Records));
+            var ipRange = geoBase.GetIpRangeAt(index);
+
+            return (ipRange.IpFrom + 1).ToString();
         }
 
         [HttpGet]
@@ -54,15 +60,11 @@ namespace MQTests.Controllers
         public string GetRandomCity()
         {
             var random = new Random();
-            var index = Convert.ToUInt32(random.Next(geoBase.Header.Records));
+            var index = Convert.ToUInt32(random.Next(IP_RANGE_COUNT));
+            var city = geoBase.GetLocationAt(index)?.City;
 
-            var successCount = 0;
-            for (var i = 0; i < TEST_COUNT; i++)
-            {
-
-                if (TestCity1(geoBase, pos))
-                    successCount += 1;
-            }
+            return city;
+            
         }
     }
 }
