@@ -29,6 +29,8 @@
             const reqCount = document.getElementById('reqCount');
             const count = reqCount ? reqCount.value : 10;
 
+            // Получим массивы случайных значений городов и ip
+            // Города из базы, а ip могут быть и не из базы
             response = await fetch('/test/rndip?count=' + count.toString(), {
                 method: 'GET',
                 headers: {
