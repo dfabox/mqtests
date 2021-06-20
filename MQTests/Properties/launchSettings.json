@@ -20,6 +20,7 @@
     "GeoSearch": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "/test.html",
       "applicationUrl": "http://localhost:36587",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

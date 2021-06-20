@@ -49,7 +49,7 @@ namespace GeoData.Data
 
         public SearchResult(ICollection<BaseGeoLocation> locations, Stopwatch sw)
         {
-            Status = locations == null && locations.Count > 0 ? SearchResultStatus.NotFound : SearchResultStatus.Success;
+            Status = locations == null || locations.Count == 0 ? SearchResultStatus.NotFound : SearchResultStatus.Success;
             Locations = locations;
             TimeMs = sw?.Elapsed.TotalMilliseconds ?? 0;
         }

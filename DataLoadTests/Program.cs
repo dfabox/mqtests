@@ -8,65 +8,56 @@ namespace DataLoadTests
 {
     class Program
     {
-        private const int TEST_COUNT = 100000;
+        // Делегат тестового поиска 
+        private delegate bool Test1(IGeoBase geoBase, uint index);
 
-        private static bool TestCity1(IGeoBase geoBase, uint pos)
+        // Реализация тестового поиска по городу
+        private static bool TestCity1(IGeoBase geoBase, uint index)
         {
-            var location = geoBase.GetLocationAt(pos);
-
-            var city = location.City; // "cit_Ula";
+            string city;
+            // Внесем долю ненайденных
+            if (index.ToString().EndsWith("0"))
+                city = "cit_NotExists";
+            else
+            {
+                var location = geoBase.GetLocationAt(index);
+                city = location.City; // "cit_Ula"
+            }
 
             var result = geoBase.FindLocationByCity(city);
 
             return result.Status == SearchResultStatus.Success;
         }
 
-        private static void TestCity(IGeoBase geoBase)
+        // Реализация тестового поиска по ip
+        private static bool TestIp1(IGeoBase geoBase, uint index)
         {
-            var random = new Random();
-            var sw = Stopwatch.StartNew();
-
-            var successCount = 0;
-            for (var i = 0; i < TEST_COUNT; i++)
-            {
-                var pos = Convert.ToUInt32(random.Next(geoBase.Header.Records));
-                if (TestCity1(geoBase, pos))
-                    successCount += 1;
-            }
-
-            sw.Stop();
-            var ms = sw.Elapsed.TotalMilliseconds;
-
-            Console.WriteLine($"t: {ms}, success: {successCount}");
-        }
-
-        private static bool TestIp1(IGeoBase geoBase, int index)
-        {
-            var ipRange = geoBase.GetIpRangeAt(Convert.ToUInt32(index));
-
+            var ipRange = geoBase.GetIpRangeAt(index);
             var result = geoBase.FindLocationByIp(ipRange.IpFrom + 1);
 
             return result.Status == SearchResultStatus.Success;
         }
 
-        private static void TestIp(IGeoBase geoBase)
+        private static void DoTestFor(IGeoBase geoBase, int testCount, Test1 test, int maxCount, string name)
         {
             var random = new Random();
             var sw = Stopwatch.StartNew();
 
             var successCount = 0;
-            for (var i = 0; i < TEST_COUNT; i++)
+            for (var i = 0; i < testCount; i++)
             {
-                var index = random.Next(0, IP_RANGE_COUNT - 1);
+                var index = random.Next(0, maxCount - 1);
 
-                if (TestIp1(geoBase, index))
+                if (test(geoBase, Convert.ToUInt32(index)))
                     successCount += 1;
             }
 
             sw.Stop();
             var ms = sw.Elapsed.TotalMilliseconds;
+            var ms1 = Math.Round(ms / testCount, 3);
+            var perSec = Math.Round(1000 * testCount / ms, 1);
 
-            Console.WriteLine($"t: {ms}, success: {successCount}");
+            Console.WriteLine($"  {name} общее время: {ms} ms, успешно: {successCount}, на 1 поиск: {ms1} ms, в секунду: {perSec}");
         }
 
         public static T GetObject<T>(Type objType = null)
@@ -74,7 +65,7 @@ namespace DataLoadTests
             return (T)Activator.CreateInstance(objType ?? typeof(T));
         }
 
-        private static void TestGeoBase<T>() where T : GeoBase
+        private static void TestGeoBase<T>(bool testIp, bool testCity, int testCount) where T : GeoBase
         {
             var w1 = Stopwatch.StartNew();
             using var geoBase = GetObject<T>();
@@ -91,25 +82,38 @@ namespace DataLoadTests
 
             w1.Stop();
 
-            Console.WriteLine($"{typeof(T).Name} => t: {w1.ElapsedMilliseconds}, n: {h.Name}, v: {h.Version}, r: {h.Records}");
+            Console.WriteLine($"{typeof(T).Name} => время открытия: {w1.ElapsedMilliseconds}, имя: {h.Name}, версия: {h.Version}, кол.записей: {h.Records}");
 
-            TestCity(geoBase);
-            TestIp(geoBase);
+            if (testIp)
+                DoTestFor(geoBase, testCount, TestIp1, IP_RANGE_COUNT, "по ip");
+
+            if (testCity)
+                DoTestFor(geoBase, testCount, TestCity1, IP_RANGE_COUNT, "по городу");
         }
 
         static void Main(string[] args)
         {
-            // Выделить размер памяти для загрузки файла
+            var sw = Stopwatch.StartNew();
+
             var baseFileName = GetLocalBaseFileName();
             var info = new FileInfo(baseFileName);
-            var allocBuffer = new byte[info.Length* 3];
+            var allocBuffer = new byte[info.Length * 2];
 
-            TestGeoBase<GeoLocalBase>();
-            TestGeoBase<GeoResourceBase>();
-            TestGeoBase<GeoMappedBase>();
+            var testIp = true;
+            var testCity = true;
+            var testCount = 100000;
 
-            var b1 = allocBuffer[0];
-            Console.WriteLine(b1);
+            //TestGeoBase<GeoResourceBase>(testIp, testCity, testCount);
+            //TestGeoBase<GeoLocalBase>(testIp, testCity, testCount);
+            //TestGeoBase<GeoMappedBase>(testIp, testCity, testCount);
+            //TestGeoBase<GeoLocalBufferedBase>(testIp, testCity, testCount);
+            TestGeoBase<GeoMemoryBase>(testIp, testCity, testCount); 
+
+            sw.Stop();
+            //var b1 = allocBuffer[0];
+            //Console.WriteLine(b1);
+            Console.WriteLine($"общее время: {sw.ElapsedMilliseconds}");
+
             Console.ReadKey();
         }
     }

@@ -54,6 +54,7 @@ namespace MQTests.Controllers
             var random = new Random();
             var result = new TestResult();
 
+            // Сформировать заданное количество городов для поиска
             for (var i = 0; i < count; i++)
             {
                 var index = Convert.ToUInt32(random.Next(geoBase.Header.Records));
@@ -73,6 +74,7 @@ namespace MQTests.Controllers
             var random = new Random();
             var result = new TestResult();
 
+            // Сформировать заданное количество ip для поиска
             for (var i = 0; i < count; i++)
             {
                 var index = Convert.ToUInt32(random.Next(IP_RANGE_COUNT));
