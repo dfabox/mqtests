@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -65,6 +67,27 @@ namespace GeoData.Common
             Buffer.BlockCopy(buffer, offset, bytes, 0, lenght);
 
             return bytes;
+        }
+
+        /// <summary>
+        /// Поток для ресурса сборки
+        /// </summary>
+        /// <param name="resourceName">имя ресурса</param>
+        /// <returns></returns>
+        public static Stream GetEmbeddedResource(string resourceName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            if (assembly == null)
+                return null;
+
+            var names = assembly.GetManifestResourceNames();
+            var name = names.FirstOrDefault(o => o.ToLower().EndsWith(resourceName.ToLower()));
+
+            if (name == null)
+                return null;
+
+            return assembly.GetManifestResourceStream(name);
         }
     }
 }

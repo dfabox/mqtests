@@ -103,11 +103,12 @@ namespace DataLoadTests
             var testCity = true;
             var testCount = 100000;
 
-            //TestGeoBase<GeoResourceBase>(testIp, testCity, testCount);
-            //TestGeoBase<GeoLocalBase>(testIp, testCity, testCount);
-            //TestGeoBase<GeoMappedBase>(testIp, testCity, testCount);
-            //TestGeoBase<GeoLocalBufferedBase>(testIp, testCity, testCount);
-            TestGeoBase<GeoMemoryBase>(testIp, testCity, testCount); 
+            // TestGeoBase<GeoResourceBase>(testIp, testCity, testCount);
+            // TestGeoBase<GeoLocalBase>(testIp, testCity, testCount);
+            // TestGeoBase<GeoMappedBase>(testIp, testCity, testCount);
+            // TestGeoBase<GeoLocalBufferedBase>(testIp, testCity, testCount);
+            // TestGeoBase<GeoMemoryBase>(testIp, testCity, testCount);
+            TestGeoBase<GeoResourceMemoryBase>(testIp, testCity, testCount);
 
             sw.Stop();
             //var b1 = allocBuffer[0];

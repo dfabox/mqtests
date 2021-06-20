@@ -66,7 +66,7 @@
             var seconds = Math.round(timeDiff);
 
             document.getElementById('testResult').innerHTML =
-                'время запросов: ' + timeDiff.toString() ;
+                'время отправки запросов: ' + timeDiff.toString() ;
         }
 
         async function getTestValues(id, count) {
@@ -96,10 +96,15 @@
                 const json = await response.json();
                 //console.log('Успех:', JSON.stringify(json));
 
+                // Показатели 
                 totalTimeMs.value += json.TimeMs;
                 totalTimeMs.count += 1;
+
+                let tRounded = Math.round(totalTimeMs.value, -3);
+                var perSec = Math.round(1000 * totalTimeMs.count / totalTimeMs.value, -1);
+
                 document.getElementById('totalTime').innerHTML =
-                    'обработано: ' + totalTimeMs.count.toString() + ', время поиска: ' + totalTimeMs.value.toString() + ' мс';
+                    'обработано: ' + totalTimeMs.count.toString() + ', время поиска: ' + tRounded.toString() + ' мс, в секунду ' + perSec.toString();
 
             } catch (error) {
                 console.error('Ошибка:', error);
