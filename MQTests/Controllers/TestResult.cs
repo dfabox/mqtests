@@ -1,9 +1,14 @@
 ﻿using System.Collections.Generic;
 
-namespace GeoSearch.Controllers
+namespace MQGeoSearch.Controllers
 {
     public class TestResult
     {
-        public ICollection<string> Items { get; private set; } = new List<string>();
+        public ICollection<string> Items { get; private set; }
+
+        public TestResult(ICollection<string> items)
+        {
+            Items = items;
+        }
     }
 }

@@ -9,10 +9,10 @@ namespace DataLoadTests
     class Program
     {
         // Делегат тестового поиска 
-        private delegate bool Test1(IGeoBase geoBase, uint index);
+        private delegate bool Test1(IGeoBase geoBase, IGeoSearch geoSearch, uint index);
 
         // Реализация тестового поиска по городу
-        private static bool TestCity1(IGeoBase geoBase, uint index)
+        private static bool TestCity1(IGeoBase geoBase, IGeoSearch geoSearch, uint index)
         {
             string city;
             // Внесем долю ненайденных
@@ -24,21 +24,21 @@ namespace DataLoadTests
                 city = location.City; // "cit_Ula"
             }
 
-            var result = geoBase.FindLocationByCity(city);
+            var result = geoSearch.FindLocationByCity(city);
 
             return result.Status == SearchResultStatus.Success;
         }
 
         // Реализация тестового поиска по ip
-        private static bool TestIp1(IGeoBase geoBase, uint index)
+        private static bool TestIp1(IGeoBase geoBase, IGeoSearch geoSearch, uint index)
         {
             var ipRange = geoBase.GetIpRangeAt(index);
-            var result = geoBase.FindLocationByIp(ipRange.IpFrom + 1);
+            var result = geoSearch.FindLocationByIp(ipRange.IpFrom + 1);
 
             return result.Status == SearchResultStatus.Success;
         }
 
-        private static void DoTestFor(IGeoBase geoBase, int testCount, Test1 test, int maxCount, string name)
+        private static void DoTestFor(IGeoBase geoBase, IGeoSearch geoSearch, int testCount, Test1 test, int maxCount, string name)
         {
             var random = new Random();
             var sw = Stopwatch.StartNew();
@@ -48,7 +48,7 @@ namespace DataLoadTests
             {
                 var index = random.Next(0, maxCount - 1);
 
-                if (test(geoBase, Convert.ToUInt32(index)))
+                if (test(geoBase, geoSearch, Convert.ToUInt32(index)))
                     successCount += 1;
             }
 
@@ -69,6 +69,7 @@ namespace DataLoadTests
         {
             var w1 = Stopwatch.StartNew();
             using var geoBase = GetObject<T>();
+            var geoSearch = new GeoSearch(geoBase);
             var h = geoBase.Header;
 
             //for (uint i = 200; i < 350; i++)
@@ -85,10 +86,10 @@ namespace DataLoadTests
             Console.WriteLine($"{typeof(T).Name} => время открытия: {w1.ElapsedMilliseconds}, имя: {h.Name}, версия: {h.Version}, кол.записей: {h.Records}");
 
             if (testIp)
-                DoTestFor(geoBase, testCount, TestIp1, IP_RANGE_COUNT, "по ip");
+                DoTestFor(geoBase, geoSearch, testCount, TestIp1, IP_RANGE_COUNT, "по ip");
 
             if (testCity)
-                DoTestFor(geoBase, testCount, TestCity1, IP_RANGE_COUNT, "по городу");
+                DoTestFor(geoBase, geoSearch, testCount, TestCity1, IP_RANGE_COUNT, "по городу");
         }
 
         static void Main(string[] args)

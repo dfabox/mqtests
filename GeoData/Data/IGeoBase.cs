@@ -13,22 +13,38 @@ namespace GeoData.Data
         public BaseHeader Header { get; }
 
         /// <summary>
-        /// Поиск метоположения по ip
+        /// Местоположение по индексу
         /// </summary>
-        /// <param name="ip">значение ip</param>
-        /// <returns></returns>
-        public SearchResult FindLocationByIp(uint ip);
+        /// <param name="index">индекс</param>
+        /// <returns>местоположение по индексу</returns>
+        public BaseGeoLocation GetLocationAt(uint index);
 
         /// <summary>
-        /// Поиск метоположений по городу (может быть несколько)
+        /// Местоположение по адресу
         /// </summary>
-        /// <param name="city"></param>
+        /// <param name="address">адрес местоположения в базе относительно начального смещения</param>
         /// <returns></returns>
-        public SearchResult FindLocationByCity(string city);
+        public BaseGeoLocation GetLocationFromAddress(uint address);
 
-        #region Методы получения данных - для отладки/тестирования
-        public BaseGeoLocation GetLocationAt(uint index);
+        /// <summary>
+        /// Получение ip-диапазона по индексу
+        /// </summary>
+        /// <param name="index">индекс</param>
+        /// <returns>диапазон по индексу</returns>
         public BaseIpRange GetIpRangeAt(uint index);
-        #endregion
+
+        /// <summary>
+        /// Адрес города по индексу
+        /// </summary>
+        /// <param name="index">индекс</param>
+        /// <returns>название города</returns>
+        public uint GetCityAddressAt(uint index);
+
+        /// <summary>
+        /// Название города по пдресу
+        /// </summary>
+        /// <param name="address">адрес местоположения в базе относительно начального смещения</param>
+        /// <returns>название города</returns>
+        public string GetCityFromAddress(uint address);
     }
 }

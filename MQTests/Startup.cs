@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace MQTests
+namespace MQGeoSearch
 {
     public class Startup
     {
@@ -21,7 +21,11 @@ namespace MQTests
         {
             services.AddControllers();
 
+            // Реализация файла базы и создание экземпляра
             services.AddSingleton<IGeoBase>(new GeoMemoryBase());
+
+            // Реализация интерфейса поиска
+            services.AddSingleton<IGeoSearch, GeoSearch>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

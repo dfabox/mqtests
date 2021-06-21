@@ -1,6 +1,6 @@
 ﻿using System;
+using GeoData.Base;
 using GeoData.Common;
-using static GeoData.Common.BaseUtils;
 
 namespace GeoData.Models
 {
@@ -18,6 +18,8 @@ namespace GeoData.Models
         public uint OffsetRanges { get; private set; }     // 48 4 смещение относительно начала файла до начала списка записей с геоинформацией
         public uint OffsetCities { get; private set; }     // 52 4 смещение относительно начала файла до начала индекса с сортировкой по названию городов
         public uint OffsetLocations { get; private set; }  // 56 4 смещение относительно начала файла до начала списка записей о местоположении
+
+        public int IpRangeRecords => BaseConsts.IP_RANGE_COUNT;      // Количество диапазонов ip
 
         public BaseHeader(byte[] buffer)
         {
