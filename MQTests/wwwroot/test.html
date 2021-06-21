@@ -53,12 +53,12 @@
 
             // По тестовому массиву сформировать запросы поиска
             ipList.Items.forEach(function (item, index) {
-                await doTest('Ip', item, totalTimeMs);
+                doTest('Ip', item, totalTimeMs);
             });
 
             // По тестовому массиву сформировать запросы поиска
             cityList.Items.forEach(function (item, index) {
-                await doTest('City', item, totalTimeMs);
+                doTest('City', item, totalTimeMs);
             });
 
             endTime = new Date();
