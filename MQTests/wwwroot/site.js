@@ -14,7 +14,7 @@ async function searchBy(id) {
 
 async function getGeoData(mode, data) {
     // Запрос поиска данных
-    //   mode = 'ip' - для поиска по ip, 'city' - для поиска по городу
+    //   mode = 'Ip' - для поиска по ip, 'City' - для поиска по городу
     //   param - параметр для поиска
 
     if (!mode || !data) {
@@ -26,8 +26,8 @@ async function getGeoData(mode, data) {
     }
 
     // Скрыть результаты предыдущего поиска и ошибки
-    document.getElementById('searchResult').style.display = "none";
-    document.getElementById('searchError').style.display = "none";
+    document.getElementById('panelResult').style.display = "none";
+    document.getElementById('panelError').style.display = "none";
 
     // Запрос
     const url = (mode == 'Ip' ? '/ip/location' : mode == 'City' ? '/city/locations' : 'error')
@@ -46,12 +46,12 @@ async function getGeoData(mode, data) {
 
         if (json.Status == 3) {
             showError(json.Msg);
-            alert(json.Msg);
+            //alert(json.Msg);
         }
         else {
             const info = getResultInfo(json);
             document.getElementById('searchResult').innerHTML = info;
-            document.getElementById('searchResult').style.display = "block";
+            document.getElementById('panelResult').style.display = "block";
         }
     } catch (error) {
         console.error('Ошибка:', error);
@@ -61,7 +61,7 @@ async function getGeoData(mode, data) {
 
 function showError(error) {
     document.getElementById('searchError').innerHTML = error;
-    document.getElementById('searchError').style.display = "block";
+    document.getElementById('panelError').style.display = "block";
 }
 
 function addColumn(value) {

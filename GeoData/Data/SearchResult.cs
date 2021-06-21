@@ -20,7 +20,8 @@ namespace GeoData.Data
         public string Msg { get; private set; }
 
         /// <summary>
-        /// Список местоположений по запросу
+        /// Список местоположений по запросу.
+        /// Для диапазона ip - единственный или не найден, для поиска по городу возможен список
         /// </summary>
         public ICollection<BaseGeoLocation> Locations { get; private set; }
 

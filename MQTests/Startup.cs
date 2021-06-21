@@ -21,10 +21,10 @@ namespace MQGeoSearch
         {
             services.AddControllers();
 
-            // Реализация файла базы и создание экземпляра
+            // Реализация файла базы и создание экземпляра при запуске
             services.AddSingleton<IGeoBase>(new GeoMemoryBase());
 
-            // Реализация интерфейса поиска
+            // Реализация интерфейса поиска, инициализация отложена
             services.AddSingleton<IGeoSearch, GeoSearch>();
         }
 
@@ -36,7 +36,9 @@ namespace MQGeoSearch
                 app.UseDeveloperExceptionPage();
             }
 
+            // Включение статических файлов
             app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseAuthorization();

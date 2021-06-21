@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace GeoData.Common
@@ -34,7 +33,7 @@ namespace GeoData.Common
         /// <param name="value">строка</param>
         /// <param name="size">размер массива</param>
         /// <param name="right">заполнитель</param>
-        /// <returns></returns>
+        /// <returns>массив байт (символов)</returns>
         public static byte[] GetBytesFromStringLen(string value, int size, char right)
         {
             value ??= "";
@@ -61,7 +60,7 @@ namespace GeoData.Common
             if (buffer == null)
                 return null;
 
-            // TODO Обработать ошибки размера буфера
+            // TODO Обработать ошибки размера буфера ?
 
             var bytes = new byte[lenght];
             Buffer.BlockCopy(buffer, offset, bytes, 0, lenght);

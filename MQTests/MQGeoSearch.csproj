@@ -6,6 +6,7 @@
 
 
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'MQTests' " />
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'GeoSearch' " />
   <ItemGroup>
     <ProjectReference Include="..\GeoData\GeoData.csproj">
       <GlobalPropertiesToRemove></GlobalPropertiesToRemove>
