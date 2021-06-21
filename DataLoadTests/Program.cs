@@ -65,20 +65,10 @@ namespace DataLoadTests
         private static void TestGeoBase<T>(bool testIp, bool testCity, int testCount) where T : GeoBase
         {
             var w1 = Stopwatch.StartNew();
+
             using var geoBase = GetObject<T>();
             var geoSearch = new GeoSearch(geoBase);
             var h = geoBase.Header;
-
-            //for (var i = 0; i < 30; i++)
-            //{
-            //    var ip1 = geoBase.GetIpRangeAt(Convert.ToUInt32(geoBase.Header.Records - 100 + i));
-            //    Console.WriteLine($"i1: {ip1.IpFrom}, i2: {ip1.IpTo}, ir: {ip1.LocationIndex}, i: {i}");
-            //}
-
-            //var ip1 = geoBase.GetIpRangeAt(Convert.ToUInt32(geoBase.Header.IpRangeRecords + 1));
-            //var b1 = geoBase.ReadBuffer(geoBase.Header.OffsetRanges + Convert.ToUInt32(geoBase.Header.IpRangeRecords* BaseIpRange.SIZE), 100);
-            //var s1 = BaseUtils.GetStringFromBytes(b1, 0, 8);
-            //var s2 = BaseUtils.GetStringFromBytes(b1, 8, 20);
 
             w1.Stop();
 

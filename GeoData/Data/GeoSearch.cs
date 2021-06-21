@@ -72,8 +72,8 @@ namespace GeoData.Data
 
             BaseGeoLocation location = null;
 
+            // Найти диапазон по ip, если найден, получим местоположение по индексу
             var ipRange = FindRangeByIp(ip);
-
             if (ipRange != null)
                 location = geoBase.GetLocationAt(ipRange.LocationIndex);
 
