@@ -58,7 +58,7 @@ namespace GeoData.Data
 
         private BaseIpRange FindRangeByIp(uint ip)
         {
-            var index = BinarySearchIp(ip, 0, Convert.ToUInt32(Header.IpRangeRecords - 1));
+            var index = BinarySearchIp(ip, 0, Convert.ToUInt32(Header.Records - 1));
 
             if (index >= 0)
                 return geoBase.GetIpRangeAt(Convert.ToUInt32(index));
@@ -185,7 +185,7 @@ namespace GeoData.Data
             // Сформировать заданное количество ip для поиска
             for (var i = 0; i < count; i++)
             {
-                var index = Convert.ToUInt32(random.Next(geoBase.Header.IpRangeRecords));
+                var index = Convert.ToUInt32(random.Next(geoBase.Header.Records));
                 var city = geoBase.GetLocationAt(index)?.City;
 
                 result.Add(city);

@@ -14,15 +14,12 @@ namespace DataLoadTests
         // Реализация тестового поиска по городу
         private static bool TestCity1(IGeoBase geoBase, IGeoSearch geoSearch, uint index)
         {
-            string city;
+            var location = geoBase.GetLocationAt(index);
+            var city = location.City; // "cit_Ula"
+
             // Внесем долю ненайденных
             if (index.ToString().EndsWith("0"))
-                city = "cit_NotExists";
-            else
-            {
-                var location = geoBase.GetLocationAt(index);
-                city = location.City; // "cit_Ula"
-            }
+                city += "?";
 
             var result = geoSearch.FindLocationByCity(city);
 
@@ -72,24 +69,26 @@ namespace DataLoadTests
             var geoSearch = new GeoSearch(geoBase);
             var h = geoBase.Header;
 
-            //for (uint i = 200; i < 350; i++)
+            //for (var i = 0; i < 30; i++)
             //{
-            //    var address = geoBase.GetCityAddressAt(i);
-            //    var city = geoBase.GetCityFromAddress(address);
-            //    var location = geoBase.GetLocationFromAddress(address);
-
-            //    Console.WriteLine($"a: {address}, c: {location.City}, p: {location.Postal}, o: {location.Organization}");
+            //    var ip1 = geoBase.GetIpRangeAt(Convert.ToUInt32(geoBase.Header.Records - 100 + i));
+            //    Console.WriteLine($"i1: {ip1.IpFrom}, i2: {ip1.IpTo}, ir: {ip1.LocationIndex}, i: {i}");
             //}
+
+            //var ip1 = geoBase.GetIpRangeAt(Convert.ToUInt32(geoBase.Header.IpRangeRecords + 1));
+            //var b1 = geoBase.ReadBuffer(geoBase.Header.OffsetRanges + Convert.ToUInt32(geoBase.Header.IpRangeRecords* BaseIpRange.SIZE), 100);
+            //var s1 = BaseUtils.GetStringFromBytes(b1, 0, 8);
+            //var s2 = BaseUtils.GetStringFromBytes(b1, 8, 20);
 
             w1.Stop();
 
             Console.WriteLine($"{typeof(T).Name} => время открытия: {w1.ElapsedMilliseconds}, имя: {h.Name}, версия: {h.Version}, кол.записей: {h.Records}");
 
             if (testIp)
-                DoTestFor(geoBase, geoSearch, testCount, TestIp1, IP_RANGE_COUNT, "по ip");
+                DoTestFor(geoBase, geoSearch, testCount, TestIp1, geoBase.Header.Records, "по ip");
 
             if (testCity)
-                DoTestFor(geoBase, geoSearch, testCount, TestCity1, IP_RANGE_COUNT, "по городу");
+                DoTestFor(geoBase, geoSearch, testCount, TestCity1, geoBase.Header.Records, "по городу");
         }
 
         static void Main(string[] args)

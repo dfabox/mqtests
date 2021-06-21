@@ -23,7 +23,7 @@ namespace GeoData.Data
         /// Местоположение по адресу
         /// </summary>
         /// <param name="address">адрес местоположения в базе относительно начального смещения</param>
-        /// <returns></returns>
+        /// <returns>местоположение</returns>
         public BaseGeoLocation GetLocationFromAddress(uint address);
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace GeoData.Data
 
         public BaseIpRange GetIpRangeAt(uint index)
         {
-            var buffer = GetBufferAt(index, Header.OffsetRanges, BaseGeoLocation.SIZE);
+            var buffer = GetBufferAt(index, Header.OffsetRanges, BaseIpRange.SIZE);
 
             return new BaseIpRange(buffer);
         }
