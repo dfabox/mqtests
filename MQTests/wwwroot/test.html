@@ -51,12 +51,14 @@
 
             var totalTimeMs = { value: 0.0, count: 0 }
 
+            // По тестовому массиву сформировать запросы поиска
             ipList.Items.forEach(function (item, index) {
-                doTest('Ip', item, totalTimeMs);
+                await doTest('Ip', item, totalTimeMs);
             });
 
+            // По тестовому массиву сформировать запросы поиска
             cityList.Items.forEach(function (item, index) {
-                doTest('City', item, totalTimeMs);
+                await doTest('City', item, totalTimeMs);
             });
 
             endTime = new Date();
@@ -67,18 +69,6 @@
 
             document.getElementById('testResult').innerHTML =
                 'время отправки запросов: ' + timeDiff.toString() ;
-        }
-
-        async function getTestValues(id, count) {
-            const response = await fetch('/test/' + id + '?count=' + count.toString(), {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-            const json = await response.json();
-
-            return json.Items;
         }
 
         async function doTest(mode, data, totalTimeMs) {
